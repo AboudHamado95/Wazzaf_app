@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "342087595042",
+    "project_id": "wazzaf-ade64",
+    "storage_bucket": "wazzaf-ade64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342087595042:android:b815805bcbf424fadfc67b",
+        "android_client_info": {
+          "package_name": "com.example.wazzaf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342087595042-pdkunkeigqcgmogrfl8ugda2kp9lsikd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wazzaf",
+            "certificate_hash": "95b157fc4f32225a9cd06129ef178a4456816c6b"
+          }
+        },
+        {
+          "client_id": "342087595042-pcbjn09rrruo7htkfocpivb1l8bs32v3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvjk9I9hvXdZJepGkms31JBsBfzcvFVcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342087595042-pcbjn09rrruo7htkfocpivb1l8bs32v3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
