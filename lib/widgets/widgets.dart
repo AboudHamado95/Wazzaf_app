@@ -70,7 +70,7 @@ Widget defaultFormFeild({
 Widget defaultTextButton({
   required Function function,
   required String text,
-  Color color = Colors.amber, 
+  Color color = Colors.amber,
 }) =>
     TextButton(
       onPressed: () {
@@ -78,7 +78,8 @@ Widget defaultTextButton({
       },
       child: Text(
         text.toUpperCase(),
-        style: TextStyle(color: color, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: color, fontWeight: FontWeight.bold, fontSize: 15.0),
       ),
     );
 

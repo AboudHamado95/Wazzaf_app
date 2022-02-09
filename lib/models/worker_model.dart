@@ -5,6 +5,7 @@ class WorkerModel {
   String? phone;
   String? city;
   String? literal;
+  String? image;
   bool? isAdmin;
 
   WorkerModel({
@@ -14,6 +15,7 @@ class WorkerModel {
     this.phone,
     this.city,
     this.literal,
+    this.image,
     this.isAdmin,
   });
   WorkerModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class WorkerModel {
     phone = json['phone'];
     city = json['city'];
     literal = json['literal'];
+    image = json['image'];
     isAdmin = json['isAdmin'];
   }
   Map<String, dynamic> toMap() {
@@ -33,6 +36,7 @@ class WorkerModel {
       'phone': phone,
       'city': city,
       'literal': literal,
+      'image': image,
       'isAdmin': isAdmin
     };
   }

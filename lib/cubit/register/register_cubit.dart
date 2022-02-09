@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wazzaf/cubit/register/register_states.dart';
-import 'package:wazzaf/models/worker__model.dart';
+import 'package:wazzaf/models/worker_model.dart';
 import 'package:wazzaf/models/user_model.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
@@ -45,6 +45,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
     required String literal,
   }) async {
     bool isAdmin = false;
+    String image = 'https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png';
     if (literal == '') {
       UserModel model = UserModel(
           uId: uId,
@@ -71,6 +72,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
           phone: phone,
           city: city,
           literal: literal,
+          image: image,
           isAdmin: isAdmin);
 
       await FirebaseFirestore.instance

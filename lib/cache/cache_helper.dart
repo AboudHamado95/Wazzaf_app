@@ -1,6 +1,7 @@
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wazzaf/components/components.dart';
+import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/screens/auth/login_screen.dart';
 
 class CacheHelper {
@@ -38,7 +39,7 @@ class CacheHelper {
   static signOut(context) {
     CacheHelper.removeData(key: 'uId').then((value) {
       if (value) {
-        navigateAndFinish(context, LoginScreen());
+        navigateAndFinish(context, loginRoute);
       }
     });
   }

@@ -3,20 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-void navigateTo(context, widget) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) {
-      return widget;
-    }),
-  );
+void navigateTo(context, routeName,) {
+  Navigator.pushNamed(context, routeName);
 }
 
-void navigateAndFinish(context, widget) {
-  Navigator.pushAndRemoveUntil(context,
-      MaterialPageRoute(builder: (context) => widget), (route) => false);
+void navigateAndFinish(context, newRouteName) {
+  Navigator.pushNamedAndRemoveUntil(context, newRouteName, (route) => false);
 }
-
 
 void showToast({
   required String message,
@@ -54,3 +47,4 @@ enum MobileVerificationState {
   SHOW_OTP_FORM_STATE,
 }
 
+enum ChangeRadioEnum { career, worker }

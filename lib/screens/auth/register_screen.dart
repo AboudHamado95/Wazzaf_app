@@ -43,10 +43,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if (state is CreateUserSuccessState) {
             CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
               uId = state.uId;
-              navigateAndFinish(context, const MainScreen());
+              navigateAndFinish(context, mainRoute);
             });
 
-            return navigateAndFinish(context, const MainScreen());
+            return navigateAndFinish(context, MainScreen());
           }
         },
         builder: (context, state) {
@@ -216,7 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               defaultTextButton(
                                   function: () {
-                                    navigateAndFinish(context, LoginScreen());
+                                    navigateAndFinish(context, loginRoute);
                                   },
                                   text: 'الدخول'),
                             ],

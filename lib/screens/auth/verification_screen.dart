@@ -11,8 +11,8 @@ import 'package:wazzaf/cubit/register/register_cubit.dart';
 import 'package:wazzaf/screens/main_screen.dart';
 import 'package:wazzaf/widgets/widgets.dart';
 
-class VertificationScreen extends StatelessWidget {
-  VertificationScreen({Key? key}) : super(key: key);
+class VerificationScreen extends StatelessWidget {
+  VerificationScreen({Key? key}) : super(key: key);
   var formKey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
 
@@ -25,7 +25,7 @@ class VertificationScreen extends StatelessWidget {
           if (state is LoginWithPhoneNumberSuccessState) {
             CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
               uId = state.uId;
-              navigateAndFinish(context, const MainScreen());
+              navigateAndFinish(context, mainRoute);
             });
           }
         },

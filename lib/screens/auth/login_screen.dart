@@ -30,11 +30,11 @@ class LoginScreen extends StatelessWidget {
           if (state is LoginSuccessState) {
             CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
               uId = state.uId;
-              navigateAndFinish(context, const MainScreen());
+              navigateAndFinish(context, mainRoute);
             });
           }
           if (state is LoginWithPhoneNumberSuccessStateWithoutId) {
-            navigateAndFinish(context, VertificationScreen());
+            navigateAndFinish(context, VerificationScreen());
           }
           if (state is LoginWithPhoneNumberErrorState) {
             showToast(message: state.error, state: ToastStates.ERROR);
@@ -109,7 +109,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                               defaultTextButton(
                                 function: () {
-                                  navigateAndFinish(context, RegisterScreen());
+                                  navigateAndFinish(context, registerRoute);
                                 },
                                 text: 'سجّل',
                               ),

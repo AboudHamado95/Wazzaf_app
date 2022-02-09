@@ -1,6 +1,26 @@
 abstract class CareerStates {}
 
+//************Initial state */
+
 class CareerInitialState extends CareerStates {}
+
+//************Add career image state */
+
+class CareerImagePickedSuccessState extends CareerStates {}
+
+class CareerImagePickedErrorState extends CareerStates {}
+
+//*************Remove career image state */
+
+class CareerRemoveImageState extends CareerStates {}
+
+//************Upload image career states */
+
+class UploadimageCareerLoadingState extends CareerStates {}
+
+class UploadimageCareerErrorState extends CareerStates {}
+
+class UploadimageCareerSuccessState extends CareerStates {}
 
 //************Get all career states*/
 
@@ -22,103 +42,83 @@ class AddCareerErrorState extends CareerStates {}
 
 class AddCareerSuccessState extends CareerStates {}
 
-//************Add career states */
+//***************Change radio button state */
 
-class UploadimageCareerLoadingState extends CareerStates {}
+class ChangeRadioButtonState extends CareerStates {}
 
-class UploadimageCareerErrorState extends CareerStates {}
+//*************Search career state */
 
-class UploadimageCareerSuccessState extends CareerStates {}
+class CareerSearchLoadingState extends CareerStates {}
 
-//************Add career image state */
+class CareerSearchSuccessState extends CareerStates {}
 
-class CareerImagePickedSuccessState extends CareerStates {}
+class CareerSearchErrorState extends CareerStates {
+  final String error;
 
-class CareerImagePickedErrorState extends CareerStates {}
+  CareerSearchErrorState(this.error);
+}
 
-//*************Remove career image state */
+//*************Search worker state */
 
-class CareerRemovePostImageState extends CareerStates {}
+class WorkerSearchLoadingState extends CareerStates {}
 
+class WorkerSearchSuccessState extends CareerStates {}
 
-// class SocialGetUserLoadingState extends SocialStates {}
+class WorkerSearchErrorState extends CareerStates {
+  final String error;
 
-// class SocialGetUserSuccessState extends SocialStates {}
+  WorkerSearchErrorState(this.error);
+}
 
-// class SocialGetUserErrorState extends SocialStates {
-//   final String error;
+//************Add image worker state */
 
-//   SocialGetUserErrorState(this.error);
-// }
+class WorkerImagePickedSuccessState extends CareerStates {}
 
+class WorkerImagePickedErrorState extends CareerStates {}
 
-// class SocialGetPostLoadingState extends SocialStates {}
+//*************Remove image worker state */
 
-// class SocialGetPostSuccessState extends SocialStates {}
+class WorkerRemoveImageState extends CareerStates {}
 
-// class SocialGetPostErrorState extends SocialStates {
-//   final String error;
+//************Upload image worker states */
 
-//   SocialGetPostErrorState(this.error);
-// }
+class UploadWorkerImageLoadingState extends CareerStates {}
 
-// class SocialLikePostSuccessState extends SocialStates {}
+class UploadWorkerImageErrorState extends CareerStates {}
 
-// class SocialLikePostErrorState extends SocialStates {
-//   final String error;
+class UploadWorkerImageSuccessState extends CareerStates {}
 
-//   SocialLikePostErrorState(this.error);
-// }
+//*************Get all workers state */
 
-// class SocialCommentPostSuccessState extends SocialStates {}
+class CareerGetWorkersDataLoadingState extends CareerStates {}
 
-// class SocialCommentPostErrorState extends SocialStates {
-//   final String error;
+class CareerGetWorkersDataSuccessState extends CareerStates {}
 
-//   SocialCommentPostErrorState(this.error);
-// }
+class CareerGetWorkersDataErrorState extends CareerStates {
+  final String error;
 
-// class SocialChangeBottomNavState extends SocialStates {}
+  CareerGetWorkersDataErrorState(this.error);
+}
 
-// class SocialNewPostState extends SocialStates {}
+//**************Update workers data state */
 
-// class SocialProfileImagePickedSuccessState extends SocialStates {}
+class UpdateWorkerDataSaccessState extends CareerStates {}
 
-// class SocialProfileImagePickedErrorState extends SocialStates {}
+class UpdateWorkerDataLoadingState extends CareerStates {}
 
-// class SocialCoverPickedSuccessState extends SocialStates {}
+class UpdateWorkerDataErrorState extends CareerStates {
+  final String error;
 
-// class SocialCoverPickedErrorState extends SocialStates {}
+  UpdateWorkerDataErrorState(this.error);
+}
 
-// class SocialUploadProfileImageSuccessState extends SocialStates {}
+//**************Filter worker data state  */
 
-// class SocialUploadProfileImageErrorState extends SocialStates {}
+class FilterWorkerSuccessState extends CareerStates {}
 
-// class SocialUploadCoverSuccessState extends SocialStates {}
+class FilterWorkerErrorState extends CareerStates {
+  final String error;
 
-// class SocialUploadCoverErrorState extends SocialStates {}
-
-// class SocialUserUpdateLoadingState extends SocialStates {}
-
-// class SocialUserUpdateErrorState extends SocialStates {}
-
-// class SocialPostImagePickedSuccessState extends SocialStates {}
-
-// class SocialPostImagePickedErrorState extends SocialStates {}
-
-// class SocialRemovePostImageState extends SocialStates {}
-
-// class SocialCreatePostLoadingState extends SocialStates {}
-
-// class SocialCreatePostErrorState extends SocialStates {}
-
-// class SocialCreatePostSuccessState extends SocialStates {}
-
-// class SocialSendMessageSuccessState extends SocialStates {}
-
-// class SocialSendMessageErrorState extends SocialStates {}
-
-// class SocialGetMessagesSuccessState extends SocialStates {}
-
-
+  FilterWorkerErrorState(this.error);
+}
 
