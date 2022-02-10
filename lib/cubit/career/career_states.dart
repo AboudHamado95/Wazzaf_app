@@ -4,6 +4,18 @@ abstract class CareerStates {}
 
 class CareerInitialState extends CareerStates {}
 
+//************Get user data state */
+
+class GetUserLoadingState extends CareerStates {}
+
+class GetUserSuccessState extends CareerStates {}
+
+class GetUserErrorState extends CareerStates {
+  final String error;
+
+  GetUserErrorState(this.error);
+}
+
 //************Add career image state */
 
 class CareerImagePickedSuccessState extends CareerStates {}
@@ -41,10 +53,6 @@ class AddCareerLoadingState extends CareerStates {}
 class AddCareerErrorState extends CareerStates {}
 
 class AddCareerSuccessState extends CareerStates {}
-
-//***************Change radio button state */
-
-class ChangeRadioButtonState extends CareerStates {}
 
 //*************Search career state */
 
@@ -121,4 +129,3 @@ class FilterWorkerErrorState extends CareerStates {
 
   FilterWorkerErrorState(this.error);
 }
-

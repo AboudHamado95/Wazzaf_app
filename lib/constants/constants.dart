@@ -1,7 +1,5 @@
 //global key for auth
 
-import 'package:wazzaf/screens/auth/verification_screen.dart';
-
 String? uId;
 
 //global verificationId for phone auth
@@ -16,6 +14,7 @@ const String mapKey = 'AIzaSyAvjk9I9hvXdZJepGkms31JBsBfzcvFVcA';
 
 const homeRoute = '/';
 const loginRoute = 'login_screen';
+const phoneRoute = 'phone_auth_screen';
 const registerRoute = 'register_screen';
 const verificationRoute = 'verification_screen';
 const addCareerRoute = 'add_career_screen';

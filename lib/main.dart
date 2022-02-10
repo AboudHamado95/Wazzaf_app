@@ -6,8 +6,10 @@ import 'package:wazzaf/cache/cache_helper.dart';
 import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/bloc_observe.dart';
 import 'package:wazzaf/cubit/career/career_cubit.dart';
+import 'package:wazzaf/cubit/register/register_cubit.dart';
 import 'package:wazzaf/screens/add_career_screen.dart';
 import 'package:wazzaf/screens/auth/login_screen.dart';
+import 'package:wazzaf/screens/auth/phone_auth.dart';
 import 'package:wazzaf/screens/auth/register_screen.dart';
 import 'package:wazzaf/screens/auth/verification_screen.dart';
 import 'package:wazzaf/screens/detail_screen.dart';
@@ -31,7 +33,7 @@ main(List<String> args) async {
   uId = CacheHelper.getData(key: 'uId');
 
   if (uId != null) {
-    widget = MainScreen();
+    widget =const MainScreen();
   } else {
     widget = LoginScreen();
   }
@@ -54,9 +56,12 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (context) => CareerCubit()
-              ..getCareers()
-              ..getWorkersData()),
+          create: (context) => CareerCubit()
+            ..getUserData()
+            ..getCareers()
+            ..getWorkersData(),
+        ),
+        BlocProvider(create: (context) => RegisterCubit()..getCareers()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -69,13 +74,14 @@ class MyApp extends StatelessWidget {
           registerRoute: (context) => RegisterScreen(),
           verificationRoute: (context) => VerificationScreen(),
           addCareerRoute: (context) => AddCareerScreen(),
-          detailRoute: (context) => DetailScreen(),
-          locationRoute: (context) => Location(),
-          mainRoute: (context) => MainScreen(),
+          detailRoute: (context) => const DetailScreen(),
+          locationRoute: (context) => const Location(),
+          mainRoute: (context) => const MainScreen(),
           searchCareerRoute: (context) => SearchCareerScreen(),
           searchWorkerRoute: (context) => SearchWorkerScreen(),
-          workersRoute: (context) => WorkersScreen(),
+          workersRoute: (context) => const WorkersScreen(),
           updateDataRoute: (context) => UpdateDataScreen(),
+          phoneRoute: (context) => PhoneAuth(),
         },
       ),
     );

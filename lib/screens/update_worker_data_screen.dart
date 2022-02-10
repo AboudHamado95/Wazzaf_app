@@ -92,13 +92,6 @@ class UpdateDataScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    // if (state is UploadWorkerImageLoadingState ||
-                    //     state is UpdateWorkerDataLoadingState)
-                    //   // const LinearProgressIndicator(),
-
-                    //   if (state is UploadWorkerImageLoadingState ||
-                    //       state is UpdateWorkerDataLoadingState)
-                    //     const SizedBox(height: 12.0),
                     SizedBox(
                       height: 190.0,
                       child: Stack(
@@ -154,13 +147,16 @@ class UpdateDataScreen extends StatelessWidget {
                                           backgroundImage:
                                               FileImage(_cubit.workerImage!)),
                                 ),
-                                IconButton(
-                                  onPressed: () => _cubit.getWokerImage(),
-                                  icon: const CircleAvatar(
-                                    radius: 20.0,
-                                    child: Icon(
-                                      Icons.camera_alt_outlined,
-                                      size: 16.0,
+                                Align(
+                                  heightFactor: 0.5,
+                                  child: IconButton(
+                                    onPressed: () => _cubit.getWokerImage(),
+                                    icon: const CircleAvatar(
+                                      radius: 20.0,
+                                      child: Icon(
+                                        Icons.camera_alt_outlined,
+                                        size: 16.0,
+                                      ),
                                     ),
                                   ),
                                 ),

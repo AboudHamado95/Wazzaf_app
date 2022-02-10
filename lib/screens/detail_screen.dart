@@ -126,19 +126,22 @@ class DetailScreen extends StatelessWidget {
                       customContainer(_cubit.filterWorkerModel!.phone!),
                       customContainer(_cubit.filterWorkerModel!.city!),
                       customContainer(_cubit.filterWorkerModel!.literal!),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          updateDataRoute,
+                      if (_cubit.userModel!.isAdmin! ||
+                          _cubit.userModel!.uId ==
+                              _cubit.filterWorkerModel!.uId!)
+                        ElevatedButton(
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            updateDataRoute,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(Icons.edit),
+                              Text('تعديل'),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.edit),
-                            Text('تعديل'),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -168,24 +171,6 @@ Widget customContainer(String text) {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-    ),
-  );
-}
-
-Widget searchFormfield() {
-  return TextFormField(
-    textDirection: ui.TextDirection.rtl,
-    textAlignVertical: TextAlignVertical.top,
-    cursorColor: Colors.amber,
-    decoration: InputDecoration(
-      prefixIcon: const Icon(Icons.search),
-      hintText: 'بحث',
-      contentPadding: const EdgeInsets.only(left: 0.0, top: 10.0),
-      fillColor: Colors.white54,
-      filled: true,
-      border: UnderlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide.none),
     ),
   );
 }

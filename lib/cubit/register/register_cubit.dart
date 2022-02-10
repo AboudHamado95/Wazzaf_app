@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wazzaf/cubit/register/register_states.dart';
+import 'package:wazzaf/models/career_model.dart';
 import 'package:wazzaf/models/worker_model.dart';
 import 'package:wazzaf/models/user_model.dart';
 
@@ -10,6 +11,22 @@ class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
 
   static RegisterCubit get(context) => BlocProvider.of(context);
+
+  List<CareerModel> careersList = [];
+
+  void getCareers() {
+    careersList = [];
+    emit(GetAllCareerForRegisterLoadingState());
+    FirebaseFirestore.instance.collection('careers').get().then((value) {
+      for (var element in value.docs) {
+        careersList.add(CareerModel.fromJson(element.data()));
+        print('${careersList[0]}');
+      }
+      emit(GetAllCareerForRegisterSuccessState());
+    }).catchError((error) {
+      emit(GetAllCareerForRegisterErrorState(error.toString()));
+    });
+  }
 
   void userRegister(
       {required String name,
@@ -36,6 +53,13 @@ class RegisterCubit extends Cubit<RegisterStates> {
     });
   }
 
+  String? literalCheck;
+
+  void changeDropDown(String value) {
+    literalCheck = value;
+    emit(ChangeDropDownState());
+  }
+
   Future<void> userCreate({
     required String uId,
     required String name,
@@ -45,7 +69,8 @@ class RegisterCubit extends Cubit<RegisterStates> {
     required String literal,
   }) async {
     bool isAdmin = false;
-    String image = 'https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png';
+    String image =
+        'https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png';
     if (literal == '') {
       UserModel model = UserModel(
           uId: uId,

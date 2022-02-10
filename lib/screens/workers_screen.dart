@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
 import 'package:wazzaf/cache/cache_helper.dart';
+import 'package:wazzaf/components/components.dart';
 import 'dart:ui' as ui;
 
 import 'package:wazzaf/constants/constants.dart';
@@ -32,6 +33,13 @@ class WorkersScreen extends StatelessWidget {
             child: Scaffold(
                 appBar: AppBar(
                   title: const Text('العمال'),
+                  actions: [
+                    IconButton(
+                      onPressed: () => navigateTo(context, searchWorkerRoute),
+                      icon: const Icon(Icons.search),
+                      padding: const EdgeInsets.all(16.0),
+                    )
+                  ],
                 ),
                 drawer: Drawer(
                   child: ListView(
@@ -53,7 +61,7 @@ class WorkersScreen extends StatelessWidget {
 }
 
 Widget buildWorkerItem(context, WorkerModel worker) => InkWell(
-      onTap: () {
+      onTap: () async {
         Navigator.pushNamed(context, detailRoute,
             arguments: {'literal': worker.literal!});
       },

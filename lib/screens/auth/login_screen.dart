@@ -17,9 +17,8 @@ import 'package:wazzaf/widgets/widgets.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   var formKey = GlobalKey<FormState>();
-  TextEditingController phoneController = TextEditingController();
-
-  PhoneAuthCredential? phoneAuthCredential;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +26,14 @@ class LoginScreen extends StatelessWidget {
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
+          if (state is LoginErrorState) {
+            showToast(message: state.error, state: ToastStates.ERROR);
+          }
           if (state is LoginSuccessState) {
             CacheHelper.saveData(key: 'uId', value: state.uId).then((value) {
               uId = state.uId;
               navigateAndFinish(context, mainRoute);
             });
-          }
-          if (state is LoginWithPhoneNumberSuccessStateWithoutId) {
-            navigateAndFinish(context, VerificationScreen());
-          }
-          if (state is LoginWithPhoneNumberErrorState) {
-            showToast(message: state.error, state: ToastStates.ERROR);
           }
         },
         builder: (context, state) {
@@ -68,28 +64,42 @@ class LoginScreen extends StatelessWidget {
                                 .bodyText1!
                                 .copyWith(color: Colors.grey),
                           ),
-                          const SizedBox(height: 30.0),
+                          SizedBox(height: 30.0),
                           defaultFormFeild(
-                              controller: phoneController,
-                              type: TextInputType.phone,
-                              returnValidate: 'الرجاء إدخال الرقم!',
+                              controller: emailController,
+                              type: TextInputType.emailAddress,
+                              returnValidate: 'الرجاء إدخال الإيميل!',
                               onSubmit: (text) {},
-                              label: 'الرقم',
-                              prefix: Icons.phone),
+                              label: 'الإيميل',
+                              prefix: Icons.email_outlined),
                           const SizedBox(height: 15.0),
+                          defaultFormFeild(
+                              controller: passwordController,
+                              type: TextInputType.visiblePassword,
+                              suffix: LoginCubit.get(context).suffix,
+                              isPassword: LoginCubit.get(context).isPassword,
+                              suffixPressed: () {
+                                LoginCubit.get(context)
+                                    .changePasswordVisibility();
+                              },
+                              onSubmit: (text) {},
+                              returnValidate: "كلمة السر صغيرة جدا",
+                              label: 'كلمة السر',
+                              prefix: Icons.lock_outline),
+                          const SizedBox(height: 30.0),
                           Conditional.single(
                               context: context,
                               conditionBuilder: (context) {
-                                return state
-                                    is! LoginWithPhoneNumberLoadingState;
+                                return state is! LoginLoadingState;
                               },
                               widgetBuilder: (context) => defaultButton(
-                                    function: () async {
+                                    function: () {
                                       if (formKey.currentState!.validate()) {
                                         LoginCubit.get(context)
-                                            .userLoginWithPhoneNumber(
-                                                phoneNumber:
-                                                    phoneController.text);
+                                            .userLoginWithEmailAndPassword(
+                                                email: emailController.text,
+                                                password:
+                                                    passwordController.text);
                                       }
                                     },
                                     text: 'الدخول',
@@ -102,19 +112,32 @@ class LoginScreen extends StatelessWidget {
                             height: 15.0,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'لا تملك حساب؟',
-                              ),
-                              defaultTextButton(
-                                function: () {
-                                  navigateAndFinish(context, registerRoute);
-                                },
-                                text: 'سجّل',
-                              ),
-                            ],
-                          ),
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'لا تملك حساب؟',
+                                ),
+                                defaultTextButton(
+                                    function: () {
+                                      navigateAndFinish(context, registerRoute);
+                                    },
+                                    text: 'سجّل'),
+                              ]),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'الدخول عبر الهاتف',
+                                ),
+                                IconButton(
+                                  onPressed: () =>
+                                      navigateTo(context, phoneRoute),
+                                  icon: const Icon(
+                                    Icons.phone,
+                                    color: Colors.amber,
+                                  ),
+                                ),
+                              ]),
                         ],
                       ),
                     ),

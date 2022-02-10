@@ -47,4 +47,3 @@ enum MobileVerificationState {
   SHOW_OTP_FORM_STATE,
 }
 
-enum ChangeRadioEnum { career, worker }

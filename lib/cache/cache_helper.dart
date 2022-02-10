@@ -2,7 +2,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wazzaf/components/components.dart';
 import 'package:wazzaf/constants/constants.dart';
-import 'package:wazzaf/screens/auth/login_screen.dart';
+import 'package:wazzaf/screens/auth/phone_auth.dart';
 
 class CacheHelper {
   static late SharedPreferences sharedPreferences;

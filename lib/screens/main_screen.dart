@@ -13,113 +13,89 @@ import 'package:wazzaf/widgets/show_dialog.dart';
 import 'package:wazzaf/widgets/widgets.dart';
 
 class MainScreen extends StatelessWidget {
-  MainScreen({Key? key}) : super(key: key);
+  const MainScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CareerCubit, CareerStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          var _cubit = CareerCubit.get(context);
+      listener: (context, state) {},
+      builder: (context, state) {
+        var _cubit = CareerCubit.get(context);
 
-          return Directionality(
+        return Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              body: Column(
-                children: [
-                  Container(
-                    height: 250.0,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.amber[100],
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(32.0),
-                        bottomRight: Radius.circular(32.0),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 32.0, left: 32.0, right: 32.0, bottom: 16.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.add_to_photos_rounded),
-                                  const SizedBox(
-                                    width: 12.0,
-                                  ),
-                                  defaultTextButton(
-                                      function: () => navigateTo(
-                                            context,
-                                            addCareerRoute,
-                                          ),
-                                      text: 'إضافة مهنة جديدة',
-                                      color: Colors.black)
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 24.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'بحث حسب المهنة',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0),
-                                        ),
-                                        Radio<ChangeRadioEnum>(
-                                          value: ChangeRadioEnum.career,
-                                          groupValue: _cubit.valueRadio!,
-                                          onChanged: (ChangeRadioEnum? value) =>
-                                              _cubit.changeRadioEnumButton(
-                                                  value!),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'بحث حسب العامل',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0),
-                                        ),
-                                        Radio<ChangeRadioEnum>(
-                                          value: ChangeRadioEnum.worker,
-                                          groupValue: _cubit.valueRadio!,
-                                          onChanged: (ChangeRadioEnum? value) =>
-                                              _cubit.changeRadioEnumButton(
-                                                  value!),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+              body: Conditional.single(
+                context: context,
+                conditionBuilder: (context) => _cubit.userModel != null,
+                widgetBuilder: (context) {
+                  return Column(
+                    children: [
+                      Container(
+                        height: 200.0,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.amber[100],
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(32.0),
+                            bottomRight: Radius.circular(32.0),
                           ),
                         ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 32.0, right: 32.0),
-                          child: searchFormfield(context, _cubit),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 32.0,
+                                  left: 32.0,
+                                  right: 32.0,
+                                  bottom: 16.0),
+                              child: Column(
+                                children: [
+                                  if (_cubit.userModel!.isAdmin!)
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.add_to_photos_rounded),
+                                        const SizedBox(
+                                          width: 12.0,
+                                        ),
+                                        defaultTextButton(
+                                            function: () => navigateTo(
+                                                  context,
+                                                  addCareerRoute,
+                                                ),
+                                            text: 'إضافة مهنة جديدة',
+                                            color: Colors.black)
+                                      ],
+                                    ),
+                                  if (!_cubit.userModel!.isAdmin!)
+                                    const SizedBox(
+                                      height: 46.0,
+                                      width: double.infinity,
+                                    )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 32.0, left: 32.0, right: 32.0),
+                              child: searchFormfield(context, _cubit),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: careerBuilder(context, _cubit.careersList, _cubit),
-                  ),
-                ],
+                      ),
+                      Expanded(
+                        child:
+                            careerBuilder(context, _cubit.careersList, _cubit),
+                      ),
+                    ],
+                  );
+                },
+                fallbackBuilder: (context) {
+                  return const Center(child: CircularProgressIndicator());
+                },
               ),
-            ),
-          );
-        });
+            ));
+      },
+    );
   }
 }
 
@@ -167,12 +143,8 @@ Widget searchFormfield(context, CareerCubit cCubit) {
         ),
       ),
       InkWell(
-          onTap: () {
-            if (cCubit.valueRadio == ChangeRadioEnum.career) {
-              navigateTo(context, searchCareerRoute);
-            } else {
-              navigateTo(context, searchWorkerRoute);
-            }
+          onTap: () async {
+            navigateTo(context, searchCareerRoute);
           },
           child: const SizedBox(
             height: 48.0,
@@ -182,7 +154,8 @@ Widget searchFormfield(context, CareerCubit cCubit) {
   );
 }
 
-void showDialogToWorkers(context, CareerModel career, CareerCubit cubit) async {
+void showDialogToWorkers(
+    context, CareerModel career, CareerCubit cubit, route) async {
   showDialog(
       context: context,
       barrierDismissible: false,
@@ -191,13 +164,13 @@ void showDialogToWorkers(context, CareerModel career, CareerCubit cubit) async {
       });
   await cubit.filterWorker(career.name!);
   Navigator.of(context).pop();
-  Navigator.pushNamed(context, workersRoute);
+  Navigator.pushNamed(context, route);
 }
 
 Widget buildCareerItem(context, CareerModel career, CareerCubit cubit) {
   return InkWell(
     onTap: () async {
-      showDialogToWorkers(context, career, cubit);
+      showDialogToWorkers(context, career, cubit, workersRoute);
     },
     borderRadius: BorderRadius.circular(16.0),
     child: Padding(

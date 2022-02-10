@@ -14,6 +14,24 @@ class RegisterErrorState extends RegisterStates {
   RegisterErrorState(this.error);
 }
 
+//************Get all career states*/
+
+class GetAllCareerForRegisterLoadingState extends RegisterStates {}
+
+class GetAllCareerForRegisterSuccessState extends RegisterStates {}
+
+class GetAllCareerForRegisterErrorState extends RegisterStates {
+  final String error;
+
+  GetAllCareerForRegisterErrorState(this.error);
+}
+
+//**************Change Drop down state */
+
+class ChangeDropDownState extends RegisterStates {}
+
+
+
 //create user state
 
 class CreateUserSuccessState extends RegisterStates {

@@ -64,7 +64,7 @@ Widget defaultFormFeild({
                   },
                   icon: Icon(suffix))
               : null,
-          border: OutlineInputBorder()),
+          border: const OutlineInputBorder()),
     );
 
 Widget defaultTextButton({
@@ -115,3 +115,10 @@ Image getCareerImage(String image) {
     fit: BoxFit.cover,
   );
 }
+
+Row customRowForDropDawn(String nameCareer) => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(nameCareer),
+      ],
+    );

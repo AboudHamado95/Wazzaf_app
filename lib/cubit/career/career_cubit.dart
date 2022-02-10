@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wazzaf/components/components.dart';
+import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 import 'package:wazzaf/models/career_model.dart';
 import 'package:wazzaf/models/worker_model.dart';
@@ -13,7 +13,25 @@ class CareerCubit extends Cubit<CareerStates> {
   CareerCubit() : super(CareerInitialState());
 
   static CareerCubit get(context) => BlocProvider.of(context);
-  WorkerModel? workerModel;
+
+  WorkerModel? userModel;
+
+  void getUserData()async {
+    emit(GetUserLoadingState());
+
+   await FirebaseFirestore.instance
+        .collection('workers')
+        .doc(uId)
+        .get()
+        .then((value) {
+      print('data: ${value.data()}');
+      userModel = WorkerModel.fromJson(value.data()!);
+      emit(GetUserSuccessState());
+    }).catchError((error) {
+      emit(GetUserErrorState(error.toString()));
+    });
+  }
+
   List<WorkerModel> workersList = [];
 
   Future getWorkersData() async {
@@ -211,13 +229,6 @@ class CareerCubit extends Cubit<CareerStates> {
     }).catchError((error) {
       emit(GetAllCareerErrorState(error.toString()));
     });
-  }
-
-  ChangeRadioEnum? valueRadio = ChangeRadioEnum.career;
-
-  void changeRadioEnumButton(ChangeRadioEnum value) {
-    valueRadio = value;
-    emit(ChangeRadioButtonState());
   }
 
   List<CareerModel> searchCareers = [];
