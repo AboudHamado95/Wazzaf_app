@@ -1,6 +1,10 @@
 //global key for auth
+import 'package:wazzaf/models/user_model.dart';
+import 'package:wazzaf/models/worker_model.dart';
 
 String? uId;
+
+String? uIdPhoneAuth;
 
 //global verificationId for phone auth
 
@@ -25,4 +29,6 @@ const searchCareerRoute = 'search_career_screen';
 const searchWorkerRoute = 'search_worker_screen';
 const workersRoute = 'workers_screen';
 const updateDataRoute = 'update_data_screen';
-
+const chatDetailsRoute = 'chat_details_screen';
+const chatsRoute = 'chats_screen';
+const pickerRoute = 'picker_screen';

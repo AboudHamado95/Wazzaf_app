@@ -1,15 +1,33 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wazzaf/components/components.dart';
 import 'package:wazzaf/constants/constants.dart';
 import 'dart:ui' as ui;
 
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
+import 'package:wazzaf/models/career_model.dart';
+import 'package:wazzaf/widgets/show_dialog.dart';
 
 class DetailScreen extends StatelessWidget {
   const DetailScreen({Key? key}) : super(key: key);
+  void showDialogToLocation(context, CareerCubit cubit, route) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return const ProgressDialog(message: 'الرجاء الانتظار');
+        });
+    await cubit.getUserData();
+    await cubit.getWorkersData();
+    await cubit.filterWorkers(cubit.userModel!.literal);
+    await cubit.handleTap(LatLng(cubit.filterWorkerModel!.latitude!,
+        cubit.filterWorkerModel!.longitude!));
+    Navigator.of(context).pop();
+    navigateTo(context, locationRoute);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +35,11 @@ class DetailScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var _cubit = CareerCubit.get(context);
-        final routeArg = ModalRoute.of(context)?.settings.arguments as Map;
+        final routeArg = ModalRoute.of(context)?.settings.arguments as String;
+        String literalRoute = routeArg;
 
         Future<bool> _onWillPop() async {
-          await _cubit.filterWorker(routeArg['literal']);
+          await _cubit.filterWorkers(routeArg);
           await Navigator.of(context)
               .pushNamedAndRemoveUntil(workersRoute, (route) => false);
 
@@ -93,8 +112,11 @@ class DetailScreen extends StatelessWidget {
                             top: 45.0,
                             left: 25.0,
                             child: GestureDetector(
-                              onTap: () {
-                                navigateTo(context, locationRoute);
+                              onTap: () async {
+                                showDialogToLocation(
+                                    context, _cubit, locationRoute);
+                                // await _cubit.filterWorker(
+                                //     _cubit.filterWorkerModel!.name!);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -131,9 +153,8 @@ class DetailScreen extends StatelessWidget {
                               _cubit.filterWorkerModel!.uId!)
                         ElevatedButton(
                           onPressed: () => Navigator.pushNamed(
-                            context,
-                            updateDataRoute,
-                          ),
+                              context, updateDataRoute,
+                              arguments: literalRoute),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: const [
@@ -142,6 +163,21 @@ class DetailScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, pickerRoute,
+                            arguments: literalRoute),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.open_in_browser_rounded,
+                            ),
+                            Center(child: Text('نماذج عن العمل')),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

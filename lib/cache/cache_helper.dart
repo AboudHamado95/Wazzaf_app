@@ -1,7 +1,7 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wazzaf/components/components.dart';
 import 'package:wazzaf/constants/constants.dart';
+import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/screens/auth/phone_auth.dart';
 
 class CacheHelper {
@@ -35,10 +35,10 @@ class CacheHelper {
     return await sharedPreferences.remove(key);
   }
 
-
   static signOut(context) {
     CacheHelper.removeData(key: 'uId').then((value) {
       if (value) {
+        CareerCubit.get(context).close();  
         navigateAndFinish(context, loginRoute);
       }
     });

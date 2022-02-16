@@ -3,10 +3,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dropdown/flutter_dropdown.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
-import 'package:wazzaf/models/career_model.dart';
-import 'package:wazzaf/models/worker_model.dart';
 import 'package:wazzaf/widgets/show_dialog.dart';
 import 'package:wazzaf/widgets/widgets.dart';
 
@@ -14,7 +15,34 @@ class UpdateDataScreen extends StatelessWidget {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  TextEditingController literalController = TextEditingController();
+
+  void locatePoistion(CareerCubit cCubit) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      Fluttertoast.showToast(msg: 'Please enable Your Location Service');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        Fluttertoast.showToast(msg: 'Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      Fluttertoast.showToast(
+          msg:
+              'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    await cCubit.updateLocation();
+  }
+
+// 35.5083218
+// 35.7882544
   showDialogToWorkersDetails(context, CareerCubit cubit) async {
     showDialog(
         context: context,
@@ -22,15 +50,32 @@ class UpdateDataScreen extends StatelessWidget {
         builder: (context) {
           return const ProgressDialog(message: 'الرجاء الانتظار');
         });
-    await cubit.updateWorker(
+    if (cubit.updateLat != null && cubit.updateLong != null) {
+      await cubit.updateWorker(
         id: cubit.filterWorkerModel!.uId!,
         name: nameController.text.trim(),
-        email: cubit.filterWorkerModel!.email!,
         image: cubit.filterWorkerModel!.image!,
+        email: cubit.filterWorkerModel!.email!,
         phone: phoneController.text.trim(),
         city: cityController.text.trim(),
-        literal: literalController.text.trim(),
-        isAdmin: cubit.filterWorkerModel!.isAdmin!);
+        literal: cubit.literalCheck!,
+        latitude: cubit.updateLat!,
+        longitude: cubit.updateLong!,
+        isAdmin: cubit.filterWorkerModel!.isAdmin!,
+      );
+    } else {
+      await cubit.updateWorker(
+          id: cubit.filterWorkerModel!.uId!,
+          name: nameController.text.trim(),
+          email: cubit.filterWorkerModel!.email!,
+          phone: phoneController.text.trim(),
+          image: cubit.filterWorkerModel!.image!,
+          city: cityController.text.trim(),
+          literal: cubit.literalCheck!,
+          latitude: cubit.filterWorkerModel!.latitude!,
+          longitude: cubit.filterWorkerModel!.longitude!,
+          isAdmin: cubit.filterWorkerModel!.isAdmin!);
+    }
   }
 
   showDialogToWorkersDetailsAndImage(context, CareerCubit cubit) async {
@@ -40,30 +85,47 @@ class UpdateDataScreen extends StatelessWidget {
         builder: (context) {
           return const ProgressDialog(message: 'الرجاء الانتظار');
         });
-    await cubit.uploadWorkerImage(
-        id: cubit.filterWorkerModel!.uId!,
-        name: nameController.text.trim(),
-        email: cubit.filterWorkerModel!.email!,
-        phone: phoneController.text.trim(),
-        city: cityController.text.trim(),
-        literal: literalController.text.trim(),
-        isAdmin: cubit.filterWorkerModel!.isAdmin!);
+    if (cubit.updateLat != null && cubit.updateLong != null) {
+      await cubit.uploadWorkerImage(
+          id: cubit.filterWorkerModel!.uId!,
+          name: nameController.text.trim(),
+          email: cubit.filterWorkerModel!.email!,
+          phone: phoneController.text.trim(),
+          city: cityController.text.trim(),
+          literal: cubit.literalCheck!,
+          latitude: cubit.updateLat,
+          longitude: cubit.updateLong,
+          isAdmin: cubit.filterWorkerModel!.isAdmin!);
+    } else {
+      await cubit.uploadWorkerImage(
+          id: cubit.filterWorkerModel!.uId!,
+          name: nameController.text.trim(),
+          email: cubit.filterWorkerModel!.email!,
+          phone: phoneController.text.trim(),
+          city: cityController.text.trim(),
+          literal: cubit.literalCheck!,
+          latitude: cubit.filterWorkerModel!.latitude,
+          longitude: cubit.filterWorkerModel!.longitude,
+          isAdmin: cubit.filterWorkerModel!.isAdmin!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CareerCubit, CareerStates>(
       listener: (context, state) {
-        if (state is FilterWorkerSuccessState) {
+        if (state is FilterWorkerState) {
           Navigator.of(context).pop();
         }
       },
       builder: (context, state) {
         var _cubit = CareerCubit.get(context);
+
+        // final routeArg = ModalRoute.of(context)?.settings.arguments as String;
+
         nameController.text = _cubit.filterWorkerModel!.name!;
         phoneController.text = _cubit.filterWorkerModel!.phone!;
         cityController.text = _cubit.filterWorkerModel!.city!;
-        literalController.text = _cubit.filterWorkerModel!.literal!;
 
         return Directionality(
           textDirection: TextDirection.rtl,
@@ -220,17 +282,55 @@ class UpdateDataScreen extends StatelessWidget {
                     const SizedBox(
                       height: 10.0,
                     ),
-                    defaultFormFeild(
-                      controller: literalController,
-                      type: TextInputType.name,
-                      returnValidate: 'الرجاء إدخال المهنة',
-                      label: 'المهنة',
-                      prefix: Icons.work_rounded,
-                      onSubmit: (text) {},
+                    Container(
+                      height: 60.0,
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(),
+                      ),
+                      child: DropDown<String>(
+                        showUnderline: false,
+                        isExpanded: true,
+                        items: _cubit.careersList.map((element) {
+                          return element.name!;
+                        }).toList(),
+                        icon:
+                            const Icon(Icons.expand_more, color: Colors.amber),
+                        customWidgets: _cubit.careersList.map((element) {
+                          return customRowForDropDawn(element.name!);
+                        }).toList(),
+                        hint: Row(
+                          children: const [
+                            Icon(Icons.work, color: Colors.grey),
+                            SizedBox(width: 8.0),
+                            Text("اختر المهنة"),
+                          ],
+                        ),
+                        onChanged: (value) {
+                          _cubit.changeDropDown(value!);
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 10.0,
                     ),
+                    Row(
+                      children: [
+                        const SizedBox(width: 10.0),
+                        const Icon(
+                          Icons.location_on,
+                          color: Colors.grey,
+                        ),
+                        const SizedBox(width: 8.0),
+                        Expanded(
+                          child: defaultButton(
+                              function: () => locatePoistion(_cubit),
+                              text: 'حدد موقعك',
+                              backgound: Colors.amber),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),

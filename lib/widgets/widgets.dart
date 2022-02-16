@@ -97,7 +97,7 @@ Widget defaultAppBar({
         titleSpacing: 5.0);
 
 Widget myDivider() => Padding(
-      padding: const EdgeInsetsDirectional.only(start: 20.0),
+      padding: const EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
       child: Container(
         width: double.infinity,
         height: 1.0,

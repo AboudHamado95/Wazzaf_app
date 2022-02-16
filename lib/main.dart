@@ -6,15 +6,20 @@ import 'package:wazzaf/cache/cache_helper.dart';
 import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/bloc_observe.dart';
 import 'package:wazzaf/cubit/career/career_cubit.dart';
+import 'package:wazzaf/cubit/login/login_cubit.dart';
 import 'package:wazzaf/cubit/register/register_cubit.dart';
+import 'package:wazzaf/models/user_model.dart';
 import 'package:wazzaf/screens/add_career_screen.dart';
 import 'package:wazzaf/screens/auth/login_screen.dart';
 import 'package:wazzaf/screens/auth/phone_auth.dart';
 import 'package:wazzaf/screens/auth/register_screen.dart';
 import 'package:wazzaf/screens/auth/verification_screen.dart';
+import 'package:wazzaf/screens/chat_details.dart';
+import 'package:wazzaf/screens/chats_screen.dart';
 import 'package:wazzaf/screens/detail_screen.dart';
 import 'package:wazzaf/screens/location.dart';
 import 'package:wazzaf/screens/main_screen.dart';
+import 'package:wazzaf/screens/picker_screen.dart';
 import 'package:wazzaf/screens/search_career_screen.dart';
 import 'package:wazzaf/screens/search_worker_screen.dart';
 import 'package:wazzaf/screens/update_worker_data_screen.dart';
@@ -33,7 +38,7 @@ main(List<String> args) async {
   uId = CacheHelper.getData(key: 'uId');
 
   if (uId != null) {
-    widget =const MainScreen();
+    widget = const MainScreen();
   } else {
     widget = LoginScreen();
   }
@@ -49,19 +54,23 @@ main(List<String> args) async {
 
 class MyApp extends StatelessWidget {
   final Widget? startWidget;
-  const MyApp({Key? key, required this.startWidget}) : super(key: key);
-
+  MyApp({Key? key, required this.startWidget}) : super(key: key);
+  UserModel? userModel;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CareerCubit()
-            ..getUserData()
-            ..getCareers()
-            ..getWorkersData(),
+            create: (context) => CareerCubit()
+              ..getUserData()
+              ..getCareers()
+              ..getWorkersData()),
+        BlocProvider(
+          create: (context) => LoginCubit()
+            // ..getUsers()
+            ..getWorkers()
+            ..getCareers(),
         ),
-        BlocProvider(create: (context) => RegisterCubit()..getCareers()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -75,13 +84,17 @@ class MyApp extends StatelessWidget {
           verificationRoute: (context) => VerificationScreen(),
           addCareerRoute: (context) => AddCareerScreen(),
           detailRoute: (context) => const DetailScreen(),
-          locationRoute: (context) => const Location(),
+          locationRoute: (context) => Location(),
           mainRoute: (context) => const MainScreen(),
           searchCareerRoute: (context) => SearchCareerScreen(),
           searchWorkerRoute: (context) => SearchWorkerScreen(),
           workersRoute: (context) => const WorkersScreen(),
           updateDataRoute: (context) => UpdateDataScreen(),
           phoneRoute: (context) => PhoneAuth(),
+          chatsRoute: (context) => const ChatsScreen(),
+          chatDetailsRoute: (context) =>
+              ChatDetails(userModel: CareerCubit.get(context).userModel!),
+          pickerRoute: (context) => const PickerScreen()
         },
       ),
     );

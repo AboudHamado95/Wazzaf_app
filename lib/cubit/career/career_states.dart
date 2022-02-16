@@ -96,6 +96,24 @@ class UploadWorkerImageErrorState extends CareerStates {}
 
 class UploadWorkerImageSuccessState extends CareerStates {}
 
+//************Add picture job state */
+
+class PictureJobSuccessState extends CareerStates {}
+
+class PictureJobErrorState extends CareerStates {}
+
+//*************Remove picture job state */
+
+class PictureJobRemoveState extends CareerStates {}
+
+//************Upload picture job states */
+
+class UploadPictureJobLoadingState extends CareerStates {}
+
+class UploadPictureJobErrorState extends CareerStates {}
+
+class UploadPictureJobSuccessState extends CareerStates {}
+
 //*************Get all workers state */
 
 class CareerGetWorkersDataLoadingState extends CareerStates {}
@@ -108,6 +126,22 @@ class CareerGetWorkersDataErrorState extends CareerStates {
   CareerGetWorkersDataErrorState(this.error);
 }
 
+//*************Get worker state */
+
+class FilterWorkerState extends CareerStates {}
+
+//**************Get location state */
+
+class SelectLocationState extends CareerStates {}
+
+//**************Marker state */
+
+class ChangeMarkerState extends CareerStates {}
+
+//**************Update location state */
+
+class UpdateLocationState extends CareerStates {}
+
 //**************Update workers data state */
 
 class UpdateWorkerDataSaccessState extends CareerStates {}
@@ -119,6 +153,9 @@ class UpdateWorkerDataErrorState extends CareerStates {
 
   UpdateWorkerDataErrorState(this.error);
 }
+//**************Change Drop down state */
+
+class ChangeDropDownState extends CareerStates {}
 
 //**************Filter worker data state  */
 
@@ -128,4 +165,24 @@ class FilterWorkerErrorState extends CareerStates {
   final String error;
 
   FilterWorkerErrorState(this.error);
+}
+
+//***************Chat state */
+
+class CareerSendMessageSuccessState extends CareerStates {}
+
+class CareerSendMessageErrorState extends CareerStates {}
+
+class CareerGetMessagesSuccessState extends CareerStates {}
+
+//****************Get User for chat state */
+
+class CareerGetAllUsersLoadingState extends CareerStates {}
+
+class CareerGetAllUsersSuccessState extends CareerStates {}
+
+class CareerGetAllUsersErrorState extends CareerStates {
+  final String error;
+
+  CareerGetAllUsersErrorState(this.error);
 }

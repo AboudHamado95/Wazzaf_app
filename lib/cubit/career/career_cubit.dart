@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 import 'package:wazzaf/models/career_model.dart';
+import 'package:wazzaf/models/message_model.dart';
 import 'package:wazzaf/models/worker_model.dart';
 
 class CareerCubit extends Cubit<CareerStates> {
@@ -15,11 +18,10 @@ class CareerCubit extends Cubit<CareerStates> {
   static CareerCubit get(context) => BlocProvider.of(context);
 
   WorkerModel? userModel;
-
-  void getUserData()async {
+  Future getUserData() async {
     emit(GetUserLoadingState());
 
-   await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('workers')
         .doc(uId)
         .get()
@@ -32,12 +34,48 @@ class CareerCubit extends Cubit<CareerStates> {
     });
   }
 
+//***************************************** */
+  List<Marker> myMarker = [];
+  Future handleTap(LatLng tappedPoint) async {
+    myMarker = [];
+    myMarker.add(
+      Marker(
+          markerId: MarkerId(tappedPoint.toString()),
+          position: LatLng(
+              filterWorkerModel!.latitude!, filterWorkerModel!.longitude!)),
+    );
+    emit(ChangeMarkerState());
+  }
+
+  CameraPosition? kGooglePlex;
+  Future locationFuction() async {
+    kGooglePlex = CameraPosition(
+      target:
+          LatLng(filterWorkerModel!.latitude!, filterWorkerModel!.longitude!),
+      zoom: 14.4746,
+    );
+    emit(SelectLocationState());
+  }
+
+  Position? position;
+  double? updateLong;
+  double? updateLat;
+  Future updateLocation() async {
+    position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    updateLong = position!.longitude;
+    updateLat = position!.latitude;
+    print('lat: $updateLat long: $updateLong');
+    emit(UpdateLocationState());
+  }
+
+//***************************** */
   List<WorkerModel> workersList = [];
 
   Future getWorkersData() async {
+    workersList = [];
     emit(CareerGetWorkersDataLoadingState());
     FirebaseFirestore.instance.collection('workers').get().then((value) {
-      workersList = [];
       for (var element in value.docs) {
         workersList.add(WorkerModel.fromJson(element.data()));
       }
@@ -63,8 +101,13 @@ class CareerCubit extends Cubit<CareerStates> {
   }
 
   WorkerModel? filterWorkerModel;
+  Future filterWorker(String name) async {
+    filterWorkerModel = workersList.firstWhere((worker) => worker.name == name);
+    emit(FilterWorkerState());
+  }
+
   List<WorkerModel>? workersFilterList;
-  Future filterWorker(name) async {
+  Future filterWorkers(name) async {
     workersFilterList = [];
     emit(CareerSearchLoadingState());
     return FirebaseFirestore.instance
@@ -75,8 +118,6 @@ class CareerCubit extends Cubit<CareerStates> {
       workersFilterList = workersList
           .where((element) => element.literal == value.docs[0].data()['name'])
           .toList();
-      filterWorkerModel = workersList.firstWhere(
-          (worker) => worker.literal == value.docs[0].data()['name']);
       emit(FilterWorkerSuccessState());
     }).catchError((error) {
       emit(FilterWorkerErrorState(error.toString()));
@@ -96,6 +137,8 @@ class CareerCubit extends Cubit<CareerStates> {
     required String city,
     required String literal,
     required bool isAdmin,
+    double? latitude,
+    double? longitude,
   }) async {
     emit(UploadWorkerImageLoadingState());
     firebase_storage.FirebaseStorage storage =
@@ -115,10 +158,48 @@ class CareerCubit extends Cubit<CareerStates> {
           city: city,
           literal: literal,
           isAdmin: isAdmin,
+          latitude: filterWorkerModel!.latitude!,
+          longitude: filterWorkerModel!.longitude!,
           image: value.toString(),
         );
       }).catchError((error) {
         emit(UploadWorkerImageErrorState());
+      });
+    }).catchError((error) {
+      emit(UploadWorkerImageErrorState());
+    });
+  }
+
+  ImagePicker pictureForJob = ImagePicker();
+
+  File? jobImage;
+
+  Future getJobPicture() async {
+    final pickedFile =
+        await pictureForJob.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      emit(PictureJobErrorState());
+      return 'No image selected.';
+    }
+    final imageTemporary = File(pickedFile.path);
+    jobImage = imageTemporary;
+    emit(PictureJobSuccessState());
+  }
+
+  Future uploadPictureForJob() async {
+    emit(UploadPictureJobLoadingState());
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+    storage
+        .ref()
+        .child('picturesJob/${Uri.file(workerImage!.path).pathSegments.last}')
+        .putFile(workerImage!)
+        .then((value) {
+      value.ref.getDownloadURL().then((value) async {
+        print(value.toString());
+        emit(UploadPictureJobSuccessState());
+      }).catchError((error) {
+        emit(UploadPictureJobErrorState());
       });
     }).catchError((error) {
       emit(UploadWorkerImageErrorState());
@@ -133,24 +214,33 @@ class CareerCubit extends Cubit<CareerStates> {
       required String city,
       required String literal,
       required bool isAdmin,
+      required double latitude,
+      required double longitude,
       String? image}) async {
     emit(UpdateWorkerDataLoadingState());
     WorkerModel model = WorkerModel(
-        uId: id,
-        name: name,
-        email: email,
-        phone: phone,
-        city: city,
-        literal: literal,
-        image: image,
-        isAdmin: isAdmin);
+      uId: id,
+      name: name,
+      email: email,
+      phone: phone,
+      city: city,
+      literal: literal,
+      image: image,
+      isAdmin: isAdmin,
+      latitude: latitude,
+      longitude: longitude,
+    );
     FirebaseFirestore.instance
         .collection('workers')
         .doc(id)
         .update(model.toMap())
         .then((value) async {
+      await updateLocation();
+      await locationFuction();
+      await getUserData();
       await getWorkersData();
-      await filterWorker(literal);
+      await filterWorkers(literal);
+      await filterWorker(filterWorkerModel!.name!);
       emit(UpdateWorkerDataSaccessState());
     }).catchError((error) {
       emit(UpdateWorkerDataErrorState(error));
@@ -279,6 +369,84 @@ class CareerCubit extends Cubit<CareerStates> {
       emit(WorkerSearchSuccessState());
     }).catchError((error) {
       emit(WorkerSearchErrorState(error.toString()));
+    });
+  }
+
+  String? literalCheck;
+
+  void changeDropDown(String value) {
+    literalCheck = value;
+    emit(ChangeDropDownState());
+  }
+
+  List<WorkerModel> users = [];
+  Future getUsersForChat() async {
+    emit(CareerGetAllUsersLoadingState());
+    if (users.isEmpty) {
+      FirebaseFirestore.instance.collection('workers').get().then((value) {
+        for (var element in value.docs) {
+          if (element.data()['uId'] != userModel!.uId) {
+            users.add(WorkerModel.fromJson(element.data()));
+          }
+        }
+        emit(CareerGetAllUsersSuccessState());
+      }).catchError((error) {
+        emit(CareerGetAllUsersErrorState(error.toString()));
+      });
+    }
+  }
+
+  Future sendMessage(
+      {required String receivedId,
+      required String dateTime,
+      required String text}) async {
+    MessageModel messageModel = MessageModel(
+        senderId: userModel!.uId,
+        receiverId: receivedId,
+        dateTime: dateTime,
+        text: text);
+    FirebaseFirestore.instance
+        .collection('workers')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receivedId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(CareerSendMessageSuccessState());
+    }).catchError((error) {
+      emit(CareerSendMessageErrorState());
+    });
+    FirebaseFirestore.instance
+        .collection('workers')
+        .doc(receivedId)
+        .collection('chats')
+        .doc(userModel!.uId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(CareerSendMessageSuccessState());
+    }).catchError((error) {
+      emit(CareerSendMessageErrorState());
+    });
+  }
+
+  List<MessageModel> messages = [];
+  void getMessages({required String receivedId}) {
+    FirebaseFirestore.instance
+        .collection('workers')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receivedId)
+        .collection('messages')
+        .orderBy('dateTime')
+        .snapshots()
+        .listen((event) {
+      messages = [];
+      for (var element in event.docs) {
+        messages.add(MessageModel.fromJson(element.data()));
+      }
+      emit(CareerGetMessagesSuccessState());
     });
   }
 }

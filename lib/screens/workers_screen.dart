@@ -34,6 +34,15 @@ class WorkersScreen extends StatelessWidget {
                 appBar: AppBar(
                   title: const Text('العمال'),
                   actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(left:2.0),
+                      child: IconButton(
+                          onPressed: () async {
+                            await CareerCubit.get(context).getUsersForChat();
+                            navigateTo(context, chatsRoute);
+                          },
+                          icon: const Icon(Icons.message_rounded)),
+                    ),
                     IconButton(
                       onPressed: () => navigateTo(context, searchWorkerRoute),
                       icon: const Icon(Icons.search),
@@ -60,10 +69,12 @@ class WorkersScreen extends StatelessWidget {
   }
 }
 
-Widget buildWorkerItem(context, WorkerModel worker) => InkWell(
+Widget buildWorkerItem(context, WorkerModel worker, CareerCubit _cubit) =>
+    InkWell(
       onTap: () async {
-        Navigator.pushNamed(context, detailRoute,
-            arguments: {'literal': worker.literal!});
+        await _cubit.filterWorker(worker.name!);
+        await _cubit.locationFuction();
+        Navigator.pushNamed(context, detailRoute, arguments: worker.literal);
       },
       borderRadius: BorderRadius.circular(16.0),
       child: Padding(
@@ -122,7 +133,7 @@ Widget workerBuilder(
     widgetBuilder: (context) => ListView.builder(
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
-        return buildWorkerItem(context, workerlist[index]);
+        return buildWorkerItem(context, workerlist[index], cCubit);
       },
       itemCount: workerlist.length,
     ),

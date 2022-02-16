@@ -162,7 +162,8 @@ void showDialogToWorkers(
       builder: (context) {
         return const ProgressDialog(message: 'الرجاء الانتظار');
       });
-  await cubit.filterWorker(career.name!);
+  await cubit.getUserData();
+  await cubit.filterWorkers(career.name!);
   Navigator.of(context).pop();
   Navigator.pushNamed(context, route);
 }

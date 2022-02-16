@@ -8,6 +8,9 @@
         "hexcolor",
         "listview",
         "nullsafety",
+        "polyline",
+        "reorderableitemsview",
+        "Uploadimage",
         "wazzaf"
     ]
 }
