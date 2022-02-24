@@ -47,92 +47,94 @@ class AddVideoScreen extends StatelessWidget {
 
       return Directionality(
         textDirection: TextDirection.rtl,
-        child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: defaultTextButton(
-                    function: () async {
-                      if (_cubit.videoFile != null) {
-                        _cubit.uploadVideo();
-                      } else {
-                        showToast(
-                            message: 'الرجاء إدخال صورة',
-                            state: ToastStates.WARNING);
-                      }
-                    },
-                    text: 'إضافة',
-                    color: defaultColor),
-              ),
-            ],
-          ),
-          body: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                    top: 20.0, left: 20.0, right: 20.0, bottom: 56.0),
-                child: Column(
-                  children: [
-                    if (state is AddCareerLoadingState ||
-                        state is UploadVideoJobLoadingState)
-                      const LinearProgressIndicator(),
-                    if (state is AddCareerLoadingState ||
-                        state is UploadVideoJobLoadingState)
+        child: SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: defaultTextButton(
+                      function: () async {
+                        if (_cubit.videoFile != null) {
+                          _cubit.uploadVideo();
+                        } else {
+                          showToast(
+                              message: 'الرجاء إدخال صورة',
+                              state: ToastStates.WARNING);
+                        }
+                      },
+                      text: 'إضافة',
+                      color: defaultColor),
+                ),
+              ],
+            ),
+            body: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 20.0, left: 20.0, right: 20.0, bottom: 56.0),
+                  child: Column(
+                    children: [
+                      if (state is AddCareerLoadingState ||
+                          state is UploadVideoJobLoadingState)
+                        const LinearProgressIndicator(),
+                      if (state is AddCareerLoadingState ||
+                          state is UploadVideoJobLoadingState)
+                        const SizedBox(
+                          height: 10.0,
+                        ),
                       const SizedBox(
                         height: 10.0,
                       ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    if (_cubit.videoFile != null)
-                      Expanded(
-                        child: Stack(
-                          alignment: AlignmentDirectional.bottomEnd,
-                          children: [
-                            Video.blocProvider(
-                              _cubit.videoFile!,
-                              aspectRatio: 1 / 1.565,
-                              autoPlay: false,
-                            ),
-                          ],
-                        ),
-                      ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            _cubit.selectVideo();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text('إضافة نموذج'),
-                              SizedBox(
-                                width: 5.0,
+                      if (_cubit.videoFile != null)
+                        Expanded(
+                          child: Stack(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            children: [
+                              Video.blocProvider(
+                                _cubit.videoFile!,
+                                aspectRatio: 1 / 1.565,
+                                autoPlay: false,
                               ),
-                              Icon(Icons.photo),
                             ],
                           ),
                         ),
+                      const SizedBox(
+                        height: 10.0,
                       ),
                     ],
                   ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              _cubit.selectVideo();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text('إضافة نموذج'),
+                                SizedBox(
+                                  width: 5.0,
+                                ),
+                                Icon(Icons.photo),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );

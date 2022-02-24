@@ -20,20 +20,22 @@ class ChatsScreen extends StatelessWidget {
         listener: (context, state) {},
         builder: (context, state) {
           var _cubit = CareerCubit.get(context);
-          return Scaffold(
-            appBar: AppBar(title: const Text('صفحة الدردشة')),
-            body: Conditional.single(
-                context: (context),
-                conditionBuilder: (context) => _cubit.users.isNotEmpty,
-                widgetBuilder: (context) => ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: _cubit.users.length,
-                      separatorBuilder: (context, index) => myDivider(),
-                      itemBuilder: (context, index) =>
-                          buildChatItem(context, _cubit.users[index]),
-                    ),
-                fallbackBuilder: (context) =>
-                    const Center(child: CircularProgressIndicator())),
+          return SafeArea(
+            child: Scaffold(
+              appBar: AppBar(title: const Text('صفحة الدردشة')),
+              body: Conditional.single(
+                  context: (context),
+                  conditionBuilder: (context) => _cubit.users.isNotEmpty,
+                  widgetBuilder: (context) => ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: _cubit.users.length,
+                        separatorBuilder: (context, index) => myDivider(),
+                        itemBuilder: (context, index) =>
+                            buildChatItem(context, _cubit.users[index]),
+                      ),
+                  fallbackBuilder: (context) =>
+                      const Center(child: CircularProgressIndicator())),
+            ),
           );
         },
       ),

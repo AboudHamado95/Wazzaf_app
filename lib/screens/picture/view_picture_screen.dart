@@ -17,17 +17,19 @@ class ViewVideosScreen extends StatelessWidget {
         builder: (context, state) {
           final routeArg = ModalRoute.of(context)?.settings.arguments as String;
 
-          return Scaffold(
-              appBar: AppBar(),
-              body: CachedNetworkImage(
-                imageUrl: routeArg,
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) =>
-                    const Center(child: Icon(Icons.error)),
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ));
+          return SafeArea(
+            child: Scaffold(
+                appBar: AppBar(),
+                body: CachedNetworkImage(
+                  imageUrl: routeArg,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.error)),
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                )),
+          );
         },
       ),
     );

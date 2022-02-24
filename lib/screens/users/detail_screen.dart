@@ -52,163 +52,165 @@ class DetailScreen extends StatelessWidget {
             textDirection: TextDirection.rtl,
             child: Directionality(
               textDirection: TextDirection.rtl,
-              child: Scaffold(
-                appBar: AppBar(
+              child: SafeArea(
+                child: Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Colors.amber[100],
+                    title: const Text('تفاصيل العامل'),
+                    elevation: 0.0,
+                  ),
                   backgroundColor: Colors.amber[100],
-                  title: const Text('تفاصيل العامل'),
-                  elevation: 0.0,
-                ),
-                backgroundColor: Colors.amber[100],
-                body: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          SizedBox(
-                            height: 190.0,
-                            child: Stack(
-                              alignment: AlignmentDirectional.bottomCenter,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                      height: 140.0,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.amber[200],
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(32.0),
-                                          bottomRight: Radius.circular(32.0),
-                                        ),
-                                      )),
-                                ),
-                                CircleAvatar(
-                                  radius: 60.0,
-                                  backgroundColor:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(60.0),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          _cubit.filterUserModel!.image!,
-                                      placeholder: (context, url) =>
-                                          const Center(
-                                              child:
-                                                  CircularProgressIndicator()),
-                                      errorWidget: (context, url, error) =>
-                                          const Center(
-                                              child: Icon(Icons.error)),
-                                      width: 100,
-                                      height: 100.0,
-                                      fit: BoxFit.cover,
+                  body: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            SizedBox(
+                              height: 190.0,
+                              child: Stack(
+                                alignment: AlignmentDirectional.bottomCenter,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                        height: 140.0,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.amber[200],
+                                          borderRadius: const BorderRadius.only(
+                                            bottomLeft: Radius.circular(32.0),
+                                            bottomRight: Radius.circular(32.0),
+                                          ),
+                                        )),
+                                  ),
+                                  CircleAvatar(
+                                    radius: 60.0,
+                                    backgroundColor:
+                                        Theme.of(context).scaffoldBackgroundColor,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(60.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            _cubit.filterUserModel!.image!,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            const Center(
+                                                child: Icon(Icons.error)),
+                                        width: 100,
+                                        height: 100.0,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            top: 45.0,
-                            left: 25.0,
-                            child: GestureDetector(
-                              onTap: () async {
-                                showDialogToLocation(
-                                    context, _cubit, locationRoute);
-                                // await _cubit.filterWorker(
-                                //     _cubit.filterWorkerModel!.name!);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(22.0),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black,
-                                      blurRadius: 6.0,
-                                      spreadRadius: 0.5,
-                                      offset: Offset(0.7, 0.7),
-                                    )
-                                  ],
-                                ),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  child: Icon(
-                                    Icons.location_on,
-                                    color: Colors.amber[300],
+                            Positioned(
+                              top: 45.0,
+                              left: 25.0,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  showDialogToLocation(
+                                      context, _cubit, locationRoute);
+                                  // await _cubit.filterWorker(
+                                  //     _cubit.filterWorkerModel!.name!);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(22.0),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        blurRadius: 6.0,
+                                        spreadRadius: 0.5,
+                                        offset: Offset(0.7, 0.7),
+                                      )
+                                    ],
                                   ),
-                                  radius: 20.0,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: Icon(
+                                      Icons.location_on,
+                                      color: Colors.amber[300],
+                                    ),
+                                    radius: 20.0,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      customContainer(_cubit.filterUserModel!.name!),
-                      customContainer(_cubit.filterUserModel!.phone!),
-                      customContainer(_cubit.filterUserModel!.city!),
-                      customContainer(_cubit.filterUserModel!.literal!),
-                      if (_cubit.userModel!.isAdmin! ||
-                          _cubit.userModel!.uId ==
-                              _cubit.filterUserModel!.uId!)
-                        ElevatedButton(
-                          onPressed: () => Navigator.pushNamed(
-                              context, updateDataRoute,
-                              arguments: literalRoute),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.edit),
-                              Text('تعديل'),
-                            ],
-                          ),
+                          ],
                         ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          state is GetPictureJobLoadingState
-                              ? const Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.pushNamed(context, picturesRoute,
-                                        arguments: literalRoute);
-                                  },
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(Icons.picture_in_picture_rounded),
-                                      SizedBox(
-                                        width: 8.0,
-                                      ),
-                                      Center(child: Text('صور عن العمل')),
-                                    ],
-                                  ),
-                                ),
-                          const SizedBox(
-                            width: 8.0,
-                          ),
+                        customContainer(_cubit.filterUserModel!.name!),
+                        customContainer(_cubit.filterUserModel!.phone!),
+                        customContainer(_cubit.filterUserModel!.city!),
+                        customContainer(_cubit.filterUserModel!.literal!),
+                        if (_cubit.userModel!.isAdmin! ||
+                            _cubit.userModel!.uId ==
+                                _cubit.filterUserModel!.uId!)
                           ElevatedButton(
-                            onPressed: () async {
-                              Navigator.pushNamed(context, videosRoute,
-                                  arguments: literalRoute);
-                            },
+                            onPressed: () => Navigator.pushNamed(
+                                context, updateDataRoute,
+                                arguments: literalRoute),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
-                                Icon(Icons.video_collection_rounded),
-                                SizedBox(
-                                  width: 8.0,
-                                ),
-                                Center(child: Text('فيديوهات عن العمل')),
+                                Icon(Icons.edit),
+                                Text('تعديل'),
                               ],
                             ),
                           ),
-                        ],
-                      )
-                    ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            state is GetPictureJobLoadingState
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ElevatedButton(
+                                    onPressed: () async {
+                                      Navigator.pushNamed(context, picturesRoute,
+                                          arguments: literalRoute);
+                                    },
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(Icons.picture_in_picture_rounded),
+                                        SizedBox(
+                                          width: 8.0,
+                                        ),
+                                        Center(child: Text('صور عن العمل')),
+                                      ],
+                                    ),
+                                  ),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                Navigator.pushNamed(context, videosRoute,
+                                    arguments: literalRoute);
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.video_collection_rounded),
+                                  SizedBox(
+                                    width: 8.0,
+                                  ),
+                                  Center(child: Text('فيديوهات عن العمل')),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

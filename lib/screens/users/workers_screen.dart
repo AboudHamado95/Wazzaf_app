@@ -31,31 +31,33 @@ class WorkersScreen extends StatelessWidget {
           onWillPop: _onWillPop,
           child: Directionality(
             textDirection: TextDirection.rtl,
-            child: Scaffold(
-                appBar: AppBar(
-                  title: const Text('العمال'),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 2.0),
-                      child: IconButton(
-                          onPressed: () async {
-                            await CareerCubit.get(context).getUsersForChat();
-                            navigateTo(context, chatsRoute);
-                          },
-                          icon: const Icon(Icons.message_rounded)),
-                    ),
-                    IconButton(
-                      onPressed: () => navigateTo(context, searchWorkerRoute),
-                      icon: const Icon(Icons.search),
-                      padding: const EdgeInsets.all(16.0),
-                    )
-                  ],
-                ),
-                drawer: DrawerWidget(
-                  cubit: _cubit,
-                ),
-                body: workerBuilder(context, _cubit.usersList, _cubit,
-                    _cubit.usersFilterList!)),
+            child: SafeArea(
+              child: Scaffold(
+                  appBar: AppBar(
+                    title: const Text('العمال'),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2.0),
+                        child: IconButton(
+                            onPressed: () async {
+                              await CareerCubit.get(context).getUsersForChat();
+                              navigateTo(context, chatsRoute);
+                            },
+                            icon: const Icon(Icons.message_rounded)),
+                      ),
+                      IconButton(
+                        onPressed: () => navigateTo(context, searchWorkerRoute),
+                        icon: const Icon(Icons.search),
+                        padding: const EdgeInsets.all(16.0),
+                      )
+                    ],
+                  ),
+                  drawer: DrawerWidget(
+                    cubit: _cubit,
+                  ),
+                  body: workerBuilder(context, _cubit.usersList, _cubit,
+                      _cubit.usersFilterList!)),
+            ),
           ),
         );
       },

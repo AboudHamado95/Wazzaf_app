@@ -35,86 +35,88 @@ class PhoneAuth extends StatelessWidget {
         var _cubit = LoginCubit.get(context);
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: Scaffold(
-            appBar: AppBar(),
-            body: Center(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IntlPhoneField(
-                          textAlign: TextAlign.start,
-                          searchText: 'ابحث عن الدولة',
-                          decoration: const InputDecoration(
-                            labelText: 'رقم الهاتف',
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(),
+          child: SafeArea(
+            child: Scaffold(
+              appBar: AppBar(),
+              body: Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IntlPhoneField(
+                            textAlign: TextAlign.start,
+                            searchText: 'ابحث عن الدولة',
+                            decoration: const InputDecoration(
+                              labelText: 'رقم الهاتف',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                              ),
                             ),
-                          ),
-                          initialCountryCode: 'IN',
-                          onChanged: (phone) {
-                            _cubit.phoneAuth = phone.completeNumber;
-                            print(phone.completeNumber);
-                          },
-                        ),
-                        const SizedBox(height: 15.0),
-                        Conditional.single(
-                            context: context,
-                            conditionBuilder: (context) {
-                              return state is! LoginWithPhoneNumberLoadingState;
+                            initialCountryCode: 'IN',
+                            onChanged: (phone) {
+                              _cubit.phoneAuth = phone.completeNumber;
+                              print(phone.completeNumber);
                             },
-                            widgetBuilder: (context) => defaultButton(
-                                  function: () async {
-                                    if (_cubit.phoneAuth != null) {
-                                      if (formKey.currentState!.validate()) {
-                                        bool phoneUser;
-                                        phoneUser = _cubit.usersList.any(
-                                            (element) =>
-                                                element.phone ==
-                                                _cubit.phoneAuth);
-
-                                        if (phoneUser) {
-                                          _cubit.getUser(_cubit.phoneAuth!);
-                                          LoginCubit.get(context)
-                                              .userLoginWithPhoneNumber(
-                                                  phoneNumber:
-                                                      _cubit.phoneAuth!);
-                                        } else {
-                                          showToast(
-                                              message: 'الرقم غير موجود',
-                                              state: ToastStates.ERROR);
+                          ),
+                          const SizedBox(height: 15.0),
+                          Conditional.single(
+                              context: context,
+                              conditionBuilder: (context) {
+                                return state is! LoginWithPhoneNumberLoadingState;
+                              },
+                              widgetBuilder: (context) => defaultButton(
+                                    function: () async {
+                                      if (_cubit.phoneAuth != null) {
+                                        if (formKey.currentState!.validate()) {
+                                          bool phoneUser;
+                                          phoneUser = _cubit.usersList.any(
+                                              (element) =>
+                                                  element.phone ==
+                                                  _cubit.phoneAuth);
+          
+                                          if (phoneUser) {
+                                            _cubit.getUser(_cubit.phoneAuth!);
+                                            LoginCubit.get(context)
+                                                .userLoginWithPhoneNumber(
+                                                    phoneNumber:
+                                                        _cubit.phoneAuth!);
+                                          } else {
+                                            showToast(
+                                                message: 'الرقم غير موجود',
+                                                state: ToastStates.ERROR);
+                                          }
                                         }
                                       }
-                                    }
-                                  },
-                                  text: 'الدخول',
-                                  isUpperCase: true,
-                                ),
-                            fallbackBuilder: (context) => const Center(
-                                  child: CircularProgressIndicator(),
-                                )),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'لا تملك حساب؟',
-                            ),
-                            defaultTextButton(
-                              function: () {
-                                navigateAndFinish(context, registerRoute);
-                              },
-                              text: 'سجّل',
-                            ),
-                          ],
-                        ),
-                      ],
+                                    },
+                                    text: 'الدخول',
+                                    isUpperCase: true,
+                                  ),
+                              fallbackBuilder: (context) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  )),
+                          const SizedBox(
+                            height: 15.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'لا تملك حساب؟',
+                              ),
+                              defaultTextButton(
+                                function: () {
+                                  navigateAndFinish(context, registerRoute);
+                                },
+                                text: 'سجّل',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -24,89 +24,91 @@ class ChatDetails extends StatelessWidget {
             listener: (context, state) {},
             builder: (context, state) {
               var _cubit = CareerCubit.get(context);
-              return Scaffold(
-                appBar: AppBar(
-                  titleSpacing: 0.0,
-                  title: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20.0,
-                        backgroundImage: NetworkImage(userModel.image!),
-                      ),
-                      const SizedBox(
-                        width: 15.0,
-                      ),
-                      Text(userModel.name!),
-                    ],
-                  ),
-                ),
-                body: Conditional.single(
-                  context: context,
-                  conditionBuilder: (context) => true,
-                  // _cubit.messages.isNotEmpty,
-                  widgetBuilder: (context) => Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
+              return SafeArea(
+                child: Scaffold(
+                  appBar: AppBar(
+                    titleSpacing: 0.0,
+                    title: Row(
                       children: [
-                        Expanded(
-                          child: ListView.separated(
-                              itemBuilder: (context, index) {
-                                var message =
-                                    CareerCubit.get(context).messages[index];
-                                if (_cubit.userModel!.uId ==
-                                    message.receiverId) {
-                                  return buildMessage(message);
-                                } else {
-                                  return buildMyMessage(message);
-                                }
-                              },
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 15.0),
-                              itemCount: _cubit.messages.length),
+                        CircleAvatar(
+                          radius: 20.0,
+                          backgroundImage: NetworkImage(userModel.image!),
                         ),
-                        Container(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey[400]!, width: 1.0),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: messageController,
-                                    decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: 'أدخل الرسالة...'),
-                                  ),
-                                ),
-                                Container(
-                                  color: defaultColor,
-                                  width: 50.0,
-                                  child: MaterialButton(
-                                    onPressed: () async {
-                                      await _cubit.sendMessage(
-                                          receivedId: userModel.uId!,
-                                          dateTime: DateTime.now().toString(),
-                                          text: messageController.text);
-                                      messageController.clear();
-                                    },
-                                    child: const Icon(Icons.send,
-                                        size: 16.0, color: Colors.white),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
+                        const SizedBox(
+                          width: 15.0,
+                        ),
+                        Text(userModel.name!),
                       ],
                     ),
                   ),
-                  fallbackBuilder: (context) => const Center(
-                    child: CircularProgressIndicator(),
+                  body: Conditional.single(
+                    context: context,
+                    conditionBuilder: (context) => true,
+                    // _cubit.messages.isNotEmpty,
+                    widgetBuilder: (context) => Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.separated(
+                                itemBuilder: (context, index) {
+                                  var message =
+                                      CareerCubit.get(context).messages[index];
+                                  if (_cubit.userModel!.uId ==
+                                      message.receiverId) {
+                                    return buildMessage(message);
+                                  } else {
+                                    return buildMyMessage(message);
+                                  }
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 15.0),
+                                itemCount: _cubit.messages.length),
+                          ),
+                          Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.grey[400]!, width: 1.0),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: messageController,
+                                      decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: 'أدخل الرسالة...'),
+                                    ),
+                                  ),
+                                  Container(
+                                    color: defaultColor,
+                                    width: 50.0,
+                                    child: MaterialButton(
+                                      onPressed: () async {
+                                        await _cubit.sendMessage(
+                                            receivedId: userModel.uId!,
+                                            dateTime: DateTime.now().toString(),
+                                            text: messageController.text);
+                                        messageController.clear();
+                                      },
+                                      child: const Icon(Icons.send,
+                                          size: 16.0, color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    fallbackBuilder: (context) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
               );

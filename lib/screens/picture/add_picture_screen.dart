@@ -33,110 +33,112 @@ class AddPictureScreen extends StatelessWidget {
         onWillPop: _onWillPop,
         child: Directionality(
           textDirection: TextDirection.rtl,
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('النماذج'),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: defaultTextButton(
-                      function: () async {
-                        if (_cubit.jobImage != null) {
-                          _cubit.uploadPictureForJob();
-                        } else {
-                          showToast(
-                              message: 'الرجاء إدخال صورة',
-                              state: ToastStates.WARNING);
-                        }
-                      },
-                      text: 'إضافة',
-                      color: defaultColor),
-                ),
-              ],
-            ),
-            body: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 20.0, left: 20.0, right: 20.0, bottom: 56.0),
-                  child: Column(
-                    children: [
-                      if (state is AddCareerLoadingState ||
-                          state is UploadPictureJobLoadingState)
-                        const LinearProgressIndicator(),
-                      if (state is AddCareerLoadingState ||
-                          state is UploadPictureJobLoadingState)
+          child: SafeArea(
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('النماذج'),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: defaultTextButton(
+                        function: () async {
+                          if (_cubit.jobImage != null) {
+                            _cubit.uploadPictureForJob();
+                          } else {
+                            showToast(
+                                message: 'الرجاء إدخال صورة',
+                                state: ToastStates.WARNING);
+                          }
+                        },
+                        text: 'إضافة',
+                        color: defaultColor),
+                  ),
+                ],
+              ),
+              body: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0, bottom: 56.0),
+                    child: Column(
+                      children: [
+                        if (state is AddCareerLoadingState ||
+                            state is UploadPictureJobLoadingState)
+                          const LinearProgressIndicator(),
+                        if (state is AddCareerLoadingState ||
+                            state is UploadPictureJobLoadingState)
+                          const SizedBox(
+                            height: 10.0,
+                          ),
                         const SizedBox(
                           height: 10.0,
                         ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      if (_cubit.jobImage != null)
-                        Expanded(
-                          child: Stack(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            children: [
-                              Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                    image: DecorationImage(
-                                        image: FileImage(_cubit.jobImage!),
-                                        fit: BoxFit.cover),
-                                  )),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                child: IconButton(
-                                  onPressed: () => _cubit.removePictureImage(),
-                                  color: defaultColor,
-                                  icon: const CircleAvatar(
-                                    radius: 20.0,
-                                    child: Icon(
-                                      Icons.close,
-                                      size: 16.0,
+                        if (_cubit.jobImage != null)
+                          Expanded(
+                            child: Stack(
+                              alignment: AlignmentDirectional.bottomEnd,
+                              children: [
+                                Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4.0),
+                                      image: DecorationImage(
+                                          image: FileImage(_cubit.jobImage!),
+                                          fit: BoxFit.cover),
+                                    )),
+                                Container(
+                                  alignment: Alignment.topLeft,
+                                  child: IconButton(
+                                    onPressed: () => _cubit.removePictureImage(),
+                                    color: defaultColor,
+                                    icon: const CircleAvatar(
+                                      radius: 20.0,
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 16.0,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              _cubit.pictureJob();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text('إضافة نموذج'),
-                                SizedBox(
-                                  width: 5.0,
-                                ),
-                                Icon(Icons.photo),
                               ],
                             ),
                           ),
+                        const SizedBox(
+                          height: 10.0,
                         ),
                       ],
                     ),
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                _cubit.pictureJob();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Text('إضافة نموذج'),
+                                  SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Icon(Icons.photo),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

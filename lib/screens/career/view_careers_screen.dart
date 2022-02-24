@@ -30,77 +30,79 @@ class MainScreen extends StatelessWidget {
             builder: (context, state) {
               var _cubit = CareerCubit.get(context);
 
-              return Scaffold(
-                drawer: DrawerWidget(cubit: _cubit),
-                body: Conditional.single(
-                  context: context,
-                  conditionBuilder: (context) => _cubit.userModel != null,
-                  widgetBuilder: (context) {
-                    return Column(
-                      children: [
-                        Container(
-                          height: 200.0,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.amber[100],
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(32.0),
-                              bottomRight: Radius.circular(32.0),
+              return SafeArea(
+                child: Scaffold(
+                  drawer: DrawerWidget(cubit: _cubit),
+                  body: Conditional.single(
+                    context: context,
+                    conditionBuilder: (context) => _cubit.userModel != null,
+                    widgetBuilder: (context) {
+                      return Column(
+                        children: [
+                          Container(
+                            height: 200.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.amber[100],
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(32.0),
+                                bottomRight: Radius.circular(32.0),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 32.0,
+                                      left: 32.0,
+                                      right: 32.0,
+                                      bottom: 16.0),
+                                  child: Column(
+                                    children: [
+                                      if (_cubit.userModel!.isAdmin!)
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                                Icons.add_to_photos_rounded),
+                                            const SizedBox(
+                                              width: 12.0,
+                                            ),
+                                            defaultTextButton(
+                                                function: () => navigateTo(
+                                                      context,
+                                                      addCareerRoute,
+                                                    ),
+                                                text: 'إضافة مهنة جديدة',
+                                                color: Colors.black)
+                                          ],
+                                        ),
+                                      if (!_cubit.userModel!.isAdmin!)
+                                        const SizedBox(
+                                          height: 46.0,
+                                          width: double.infinity,
+                                        )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 32.0, left: 32.0, right: 32.0),
+                                  child: searchFormfield(context, _cubit),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 32.0,
-                                    left: 32.0,
-                                    right: 32.0,
-                                    bottom: 16.0),
-                                child: Column(
-                                  children: [
-                                    if (_cubit.userModel!.isAdmin!)
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                              Icons.add_to_photos_rounded),
-                                          const SizedBox(
-                                            width: 12.0,
-                                          ),
-                                          defaultTextButton(
-                                              function: () => navigateTo(
-                                                    context,
-                                                    addCareerRoute,
-                                                  ),
-                                              text: 'إضافة مهنة جديدة',
-                                              color: Colors.black)
-                                        ],
-                                      ),
-                                    if (!_cubit.userModel!.isAdmin!)
-                                      const SizedBox(
-                                        height: 46.0,
-                                        width: double.infinity,
-                                      )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 32.0, left: 32.0, right: 32.0),
-                                child: searchFormfield(context, _cubit),
-                              ),
-                            ],
+                          Expanded(
+                            child: careerBuilder(
+                                context, _cubit.careersList, _cubit),
                           ),
-                        ),
-                        Expanded(
-                          child: careerBuilder(
-                              context, _cubit.careersList, _cubit),
-                        ),
-                      ],
-                    );
-                  },
-                  fallbackBuilder: (context) {
-                    return const Center(child: CircularProgressIndicator());
-                  },
+                        ],
+                      );
+                    },
+                    fallbackBuilder: (context) {
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  ),
                 ),
               );
             },

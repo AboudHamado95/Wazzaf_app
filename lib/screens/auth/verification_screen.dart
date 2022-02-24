@@ -30,48 +30,50 @@ class VerificationScreen extends StatelessWidget {
       builder: (context, state) {
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: Scaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  children: [
-                    const Spacer(),
-                    defaultFormFeild(
-                        controller: otpController,
-                        type: TextInputType.number,
-                        returnValidate: 'الرجاء إدخال رمز التأكيد!',
-                        onSubmit: (text) {},
-                        label: 'رمز التفعيل',
-                        prefix: Icons.lock_open_outlined),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Conditional.single(
-                        context: context,
-                        conditionBuilder: (context) {
-                          return state is! LoginWithPhoneNumberLoadingState;
-                        },
-                        widgetBuilder: (context) => defaultButton(
-                              function: () async {
-                                if (formKey.currentState!.validate()) {
-                                  PhoneAuthCredential phoneAuth =
-                                      await LoginCubit.get(context)
-                                          .phoneAuthCredentialFunction(
-                                              otpController.text);
-                                  LoginCubit.get(context)
-                                      .signInWithPhoneAuthCredential(phoneAuth);
-                                }
-                              },
-                              text: 'تأكيد الرمز',
-                              isUpperCase: true,
-                            ),
-                        fallbackBuilder: (context) => const Center(
-                              child: CircularProgressIndicator(),
-                            )),
-                    const Spacer(),
-                  ],
+          child: SafeArea(
+            child: Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      const Spacer(),
+                      defaultFormFeild(
+                          controller: otpController,
+                          type: TextInputType.number,
+                          returnValidate: 'الرجاء إدخال رمز التأكيد!',
+                          onSubmit: (text) {},
+                          label: 'رمز التفعيل',
+                          prefix: Icons.lock_open_outlined),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Conditional.single(
+                          context: context,
+                          conditionBuilder: (context) {
+                            return state is! LoginWithPhoneNumberLoadingState;
+                          },
+                          widgetBuilder: (context) => defaultButton(
+                                function: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    PhoneAuthCredential phoneAuth =
+                                        await LoginCubit.get(context)
+                                            .phoneAuthCredentialFunction(
+                                                otpController.text);
+                                    LoginCubit.get(context)
+                                        .signInWithPhoneAuthCredential(phoneAuth);
+                                  }
+                                },
+                                text: 'تأكيد الرمز',
+                                isUpperCase: true,
+                              ),
+                          fallbackBuilder: (context) => const Center(
+                                child: CircularProgressIndicator(),
+                              )),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
               ),
             ),

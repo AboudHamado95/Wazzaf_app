@@ -26,32 +26,34 @@ class VideosScreen extends StatelessWidget {
         builder: (context, state) {
           var _cubit = CareerCubit.get(context);
 
-          return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(50.0),
-                child: defaultAppBar(
-                  context: context,
-                  title: 'نماذج',
-                  actions: [
-                    if (_cubit.userModel!.isAdmin! ||
-                        _cubit.userModel!.uId == _cubit.filterUserModel!.uId!)
-                      Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: IconButton(
-                            onPressed: () => navigateTo(context, addVideoRoute),
-                            icon: const Icon(Icons.video_camera_back_outlined),
-                            color: defaultColor,
-                          )),
-                  ],
+          return SafeArea(
+            child: Scaffold(
+                appBar: PreferredSize(
+                  preferredSize: const Size.fromHeight(50.0),
+                  child: defaultAppBar(
+                    context: context,
+                    title: 'نماذج',
+                    actions: [
+                      if (_cubit.userModel!.isAdmin! ||
+                          _cubit.userModel!.uId == _cubit.filterUserModel!.uId!)
+                        Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: IconButton(
+                              onPressed: () => navigateTo(context, addVideoRoute),
+                              icon: const Icon(Icons.video_camera_back_outlined),
+                              color: defaultColor,
+                            )),
+                    ],
+                  ),
                 ),
-              ),
-              body: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _cubit.videosList.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return itemList(context, _cubit.videosList[index], _cubit);
-                },
-              ));
+                body: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: _cubit.videosList.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return itemList(context, _cubit.videosList[index], _cubit);
+                  },
+                )),
+          );
 
           //************************** */
         },

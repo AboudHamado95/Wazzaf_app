@@ -58,30 +58,32 @@ class Location extends StatelessWidget {
           var _cubit = CareerCubit.get(context);
           return Directionality(
             textDirection: TextDirection.rtl,
-            child: Scaffold(
-              key: scaffoldKey,
-              resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                title: const Text('موقع العامل'),
-              ),
-              body: Stack(
-                children: [
-                  GoogleMap(
-                    initialCameraPosition: _cubit.kGooglePlex!,
-                    mapType: MapType.normal,
-                    myLocationButtonEnabled: false,
-                    myLocationEnabled: true,
-                    zoomControlsEnabled: true,
-                    zoomGesturesEnabled: true,
-                    markers: Set.from(_cubit.myMarker),
-                    // onTap: _cubit.handleTap,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controllerGoogleMap.complete(controller);
-                      newGoogleMapController = controller;
-                      locatePoistion(_cubit);
-                    },
-                  ),
-                ],
+            child: SafeArea(
+              child: Scaffold(
+                key: scaffoldKey,
+                resizeToAvoidBottomInset: true,
+                appBar: AppBar(
+                  title: const Text('موقع العامل'),
+                ),
+                body: Stack(
+                  children: [
+                    GoogleMap(
+                      initialCameraPosition: _cubit.kGooglePlex!,
+                      mapType: MapType.normal,
+                      myLocationButtonEnabled: false,
+                      myLocationEnabled: true,
+                      zoomControlsEnabled: true,
+                      zoomGesturesEnabled: true,
+                      markers: Set.from(_cubit.myMarker),
+                      // onTap: _cubit.handleTap,
+                      onMapCreated: (GoogleMapController controller) {
+                        _controllerGoogleMap.complete(controller);
+                        newGoogleMapController = controller;
+                        locatePoistion(_cubit);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           );

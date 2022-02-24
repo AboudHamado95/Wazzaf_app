@@ -22,39 +22,41 @@ class PicturesScreen extends StatelessWidget {
         builder: (context, state) {
           var _cubit = CareerCubit.get(context);
 
-          return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(50.0),
-              child: defaultAppBar(
-                context: context,
-                title: 'نماذج',
-                actions: [
-                  if (_cubit.userModel!.isAdmin! ||
-                      _cubit.userModel!.uId == _cubit.filterUserModel!.uId!)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: IconButton(
-                        onPressed: () => navigateTo(context, addPictureRoute),
-                        icon: const Icon(Icons.add_photo_alternate_outlined),
-                        color: defaultColor,
+          return SafeArea(
+            child: Scaffold(
+              appBar: PreferredSize(
+                preferredSize: const Size.fromHeight(50.0),
+                child: defaultAppBar(
+                  context: context,
+                  title: 'نماذج',
+                  actions: [
+                    if (_cubit.userModel!.isAdmin! ||
+                        _cubit.userModel!.uId == _cubit.filterUserModel!.uId!)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: IconButton(
+                          onPressed: () => navigateTo(context, addPictureRoute),
+                          icon: const Icon(Icons.add_photo_alternate_outlined),
+                          color: defaultColor,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 2.8,
-                    crossAxisSpacing: 1,
-                    mainAxisSpacing: 1),
-                itemCount: _cubit.picturesList.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return itemList(context, _cubit.picturesList[index], _cubit);
-                },
+              body: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 3 / 2.8,
+                      crossAxisSpacing: 1,
+                      mainAxisSpacing: 1),
+                  itemCount: _cubit.picturesList.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return itemList(context, _cubit.picturesList[index], _cubit);
+                  },
+                ),
               ),
             ),
           );
