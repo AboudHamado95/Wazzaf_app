@@ -66,35 +66,35 @@ class CareerSearchErrorState extends CareerStates {
   CareerSearchErrorState(this.error);
 }
 
-//*************Search worker state */
+//*************Search User state */
 
-class WorkerSearchLoadingState extends CareerStates {}
+class UserSearchLoadingState extends CareerStates {}
 
-class WorkerSearchSuccessState extends CareerStates {}
+class UserSearchSuccessState extends CareerStates {}
 
-class WorkerSearchErrorState extends CareerStates {
+class UserSearchErrorState extends CareerStates {
   final String error;
 
-  WorkerSearchErrorState(this.error);
+  UserSearchErrorState(this.error);
 }
 
-//************Add image worker state */
+//************Add image User state */
 
-class WorkerImagePickedSuccessState extends CareerStates {}
+class UserImagePickedSuccessState extends CareerStates {}
 
-class WorkerImagePickedErrorState extends CareerStates {}
+class UserImagePickedErrorState extends CareerStates {}
 
-//*************Remove image worker state */
+//*************Remove image User state */
 
-class WorkerRemoveImageState extends CareerStates {}
+class UserRemoveImageState extends CareerStates {}
 
-//************Upload image worker states */
+//************Upload image User states */
 
-class UploadWorkerImageLoadingState extends CareerStates {}
+class UploadUserImageLoadingState extends CareerStates {}
 
-class UploadWorkerImageErrorState extends CareerStates {}
+class UploadUserImageErrorState extends CareerStates {}
 
-class UploadWorkerImageSuccessState extends CareerStates {}
+class UploadUserImageSuccessState extends CareerStates {}
 
 //************Add picture job state */
 
@@ -114,21 +114,87 @@ class UploadPictureJobErrorState extends CareerStates {}
 
 class UploadPictureJobSuccessState extends CareerStates {}
 
-//*************Get all workers state */
+//*************Get picture job state */
 
-class CareerGetWorkersDataLoadingState extends CareerStates {}
+class GetPictureJobLoadingState extends CareerStates {}
 
-class CareerGetWorkersDataSuccessState extends CareerStates {}
+class GetPictureJobSuccessState extends CareerStates {}
 
-class CareerGetWorkersDataErrorState extends CareerStates {
+class GetPictureJobErrorState extends CareerStates {}
+
+//*************Create picture model state */
+
+class CreatePictureLoadingState extends CareerStates {}
+
+class CreatePictureSuccessState extends CareerStates {}
+
+class CreatePictureErrorState extends CareerStates {}
+
+//**************Add picture to list state */
+
+class AddPictureToListState extends CareerStates {}
+
+//************Add Video job state */
+
+class VideoJobSuccessState extends CareerStates {}
+
+class VideoJobErrorState extends CareerStates {}
+
+//*************Remove Video job state */
+
+class VideoJobRemoveState extends CareerStates {}
+
+//************Upload Video job states */
+
+class UploadVideoJobLoadingState extends CareerStates {}
+
+class UploadVideoJobErrorState extends CareerStates {}
+
+class UploadVideoJobSuccessState extends CareerStates {}
+
+//*************Get Video job state */
+
+class GetVideoJobLoadingState extends CareerStates {}
+
+class GetVideoJobSuccessState extends CareerStates {}
+
+class GetVideoJobErrorState extends CareerStates {}
+
+//*************Show Video state */
+
+class ShowVideoLoadingState extends CareerStates {}
+
+class ShowVideoSuccessState extends CareerStates {}
+
+class ShowVideoErrorState extends CareerStates {}
+
+//*************Create Video model state */
+
+class CreateVideoLoadingState extends CareerStates {}
+
+class CreateVideoSuccessState extends CareerStates {}
+
+class CreateVideoErrorState extends CareerStates {}
+
+//**************Add Video to list state */
+
+class AddVideoToListState extends CareerStates {}
+
+//*************Get all Users state */
+
+class CareerGetUsersDataLoadingState extends CareerStates {}
+
+class CareerGetUsersDataSuccessState extends CareerStates {}
+
+class CareerGetUsersDataErrorState extends CareerStates {
   final String error;
 
-  CareerGetWorkersDataErrorState(this.error);
+  CareerGetUsersDataErrorState(this.error);
 }
 
-//*************Get worker state */
+//*************Get User state */
 
-class FilterWorkerState extends CareerStates {}
+class FilterUserState extends CareerStates {}
 
 //**************Get location state */
 
@@ -142,29 +208,29 @@ class ChangeMarkerState extends CareerStates {}
 
 class UpdateLocationState extends CareerStates {}
 
-//**************Update workers data state */
+//**************Update Users data state */
 
-class UpdateWorkerDataSaccessState extends CareerStates {}
+class UpdateUserDataSuccessState extends CareerStates {}
 
-class UpdateWorkerDataLoadingState extends CareerStates {}
+class UpdateUserDataLoadingState extends CareerStates {}
 
-class UpdateWorkerDataErrorState extends CareerStates {
+class UpdateUserDataErrorState extends CareerStates {
   final String error;
 
-  UpdateWorkerDataErrorState(this.error);
+  UpdateUserDataErrorState(this.error);
 }
 //**************Change Drop down state */
 
 class ChangeDropDownState extends CareerStates {}
 
-//**************Filter worker data state  */
+//**************Filter User data state  */
 
-class FilterWorkerSuccessState extends CareerStates {}
+class FilterUserSuccessState extends CareerStates {}
 
-class FilterWorkerErrorState extends CareerStates {
+class FilterUserErrorState extends CareerStates {
   final String error;
 
-  FilterWorkerErrorState(this.error);
+  FilterUserErrorState(this.error);
 }
 
 //***************Chat state */

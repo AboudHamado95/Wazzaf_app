@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:wazzaf/cubit/register/register_states.dart';
 import 'package:wazzaf/models/career_model.dart';
-import 'package:wazzaf/models/worker_model.dart';
+import 'package:wazzaf/models/user_model.dart';
 import 'package:wazzaf/models/user_model.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
@@ -91,11 +91,15 @@ class RegisterCubit extends Cubit<RegisterStates> {
     if (literal == '') {
       UserModel model = UserModel(
           uId: uId,
-          name: name,
-          email: email,
-          phone: phone,
-          city: city,
-          isAdmin: isAdmin);
+        name: name,
+        email: email,
+        phone: phone,
+        city: city,
+        literal: 'مستخدم عادي',
+        image: image,
+        isAdmin: isAdmin,
+        latitude: lat,
+        longitude: lan,);
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -107,7 +111,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         emit(CreateUserErrorState(error));
       });
     } else {
-      WorkerModel model = WorkerModel(
+      UserModel model = UserModel(
         uId: uId,
         name: name,
         email: email,
@@ -121,7 +125,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
       );
 
       await FirebaseFirestore.instance
-          .collection('workers')
+          .collection('users')
           .doc(uId)
           .set(model.toMap())
           .then((value) {
@@ -130,6 +134,12 @@ class RegisterCubit extends Cubit<RegisterStates> {
         emit(CreateUserErrorState(error));
       });
     }
+  }
+
+  String? phoneAuth;
+  void phone(String number) {
+    phoneAuth = number;
+    emit(ChangePhoneAuthState());
   }
 
   IconData suffix = Icons.visibility_outlined;

@@ -30,6 +30,10 @@ class GetAllCareerForRegisterErrorState extends RegisterStates {
 
 class ChangeDropDownState extends RegisterStates {}
 
+//**************Change phone auth state */
+
+class ChangePhoneAuthState extends RegisterStates {}
+
 //**************Location state */
 
 class LocationState extends RegisterStates {}

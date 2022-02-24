@@ -29,19 +29,13 @@ class GetAllCareerErrorState extends LoginStates {
   GetAllCareerErrorState(this.error);
 }
 
-//************Get all workers states*/
 
-class GetAllWorkersForPhoneLoadingState extends LoginStates {}
+//**************Change phone auth state */
 
-class GetAllWorkersForPhoneSuccessState extends LoginStates {}
+class ChangePhoneAuthState extends LoginStates {}
 
-class GetAllWorkersForPhoneErrorState extends LoginStates {
-  final String error;
 
-  GetAllWorkersForPhoneErrorState(this.error);
-}
-
-//************Get all users states*/
+//************Get all Users states*/
 
 class GetAllUsersForPhoneLoadingState extends LoginStates {}
 
@@ -53,6 +47,7 @@ class GetAllUsersForPhoneErrorState extends LoginStates {
   GetAllUsersForPhoneErrorState(this.error);
 }
 
+// /
 //************Get user data state */
 
 class GetUserLoadingState extends LoginStates {}
@@ -65,17 +60,7 @@ class GetUserErrorState extends LoginStates {
   GetUserErrorState(this.error);
 }
 
-//************Get worker data state */
 
-class GetWorkerLoadingState extends LoginStates {}
-
-class GetWorkerSuccessState extends LoginStates {}
-
-class GetWorkerErrorState extends LoginStates {
-  final String error;
-
-  GetWorkerErrorState(this.error);
-}
 
 //******************** */
 

@@ -9,26 +9,40 @@ import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/login/login_cubit.dart';
 import 'package:wazzaf/cubit/register/register_cubit.dart';
 import 'package:wazzaf/models/user_model.dart';
-import 'package:wazzaf/screens/add_career_screen.dart';
+import 'package:wazzaf/models/user_model.dart';
+import 'package:wazzaf/screens/career/add_career_screen.dart';
+import 'package:wazzaf/screens/picture/add_picture_screen.dart';
+import 'package:wazzaf/screens/users/about_screen.dart';
+import 'package:wazzaf/screens/users/detail_screen.dart';
+import 'package:wazzaf/screens/users/update_worker_data_screen.dart';
+import 'package:wazzaf/screens/users/workers_screen.dart';
+import 'package:wazzaf/screens/video/add_video_screen.dart';
 import 'package:wazzaf/screens/auth/login_screen.dart';
 import 'package:wazzaf/screens/auth/phone_auth.dart';
 import 'package:wazzaf/screens/auth/register_screen.dart';
 import 'package:wazzaf/screens/auth/verification_screen.dart';
-import 'package:wazzaf/screens/chat_details.dart';
-import 'package:wazzaf/screens/chats_screen.dart';
-import 'package:wazzaf/screens/detail_screen.dart';
-import 'package:wazzaf/screens/location.dart';
-import 'package:wazzaf/screens/main_screen.dart';
-import 'package:wazzaf/screens/picker_screen.dart';
-import 'package:wazzaf/screens/search_career_screen.dart';
-import 'package:wazzaf/screens/search_worker_screen.dart';
-import 'package:wazzaf/screens/update_worker_data_screen.dart';
-import 'package:wazzaf/screens/workers_screen.dart';
+import 'package:wazzaf/screens/chat/chat_details.dart';
+import 'package:wazzaf/screens/chat/chats_screen.dart';
+import 'package:wazzaf/screens/location/location.dart';
+import 'package:wazzaf/screens/career/view_careers_screen.dart';
+import 'package:wazzaf/screens/picture/pictures_screen.dart';
+import 'package:wazzaf/screens/search/search_career_screen.dart';
+import 'package:wazzaf/screens/search/search_worker_screen.dart';
+import 'package:wazzaf/screens/video/videos_screen.dart';
+import 'package:wazzaf/screens/picture/view_picture_screen.dart';
 import 'package:wazzaf/styles/themes/themes.dart';
 
 main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  await Firebase.initializeApp(
+    name: 'wazzaf',
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyAFk__sktbOMhMaKoxqGSn62TjEiWiwKzA",
+        appId: "1:342087595042:web:40d2e4c4bcbceb42dfc67b",
+        messagingSenderId: "342087595042",
+        projectId: "wazzaf-ade64"),
+  );
 
   // var token = await FirebaseMessaging.instance.getToken();
   // print('token: $token');
@@ -64,18 +78,17 @@ class MyApp extends StatelessWidget {
             create: (context) => CareerCubit()
               ..getUserData()
               ..getCareers()
-              ..getWorkersData()),
+              ..getUsersData()),
         BlocProvider(
           create: (context) => LoginCubit()
-            // ..getUsers()
-            ..getWorkers()
+            ..getUsers()
             ..getCareers(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
-        darkTheme: darkTheme,
+        // darkTheme: darkTheme,
         initialRoute: homeRoute,
         routes: {
           homeRoute: (context) => startWidget!,
@@ -94,7 +107,12 @@ class MyApp extends StatelessWidget {
           chatsRoute: (context) => const ChatsScreen(),
           chatDetailsRoute: (context) =>
               ChatDetails(userModel: CareerCubit.get(context).userModel!),
-          pickerRoute: (context) => const PickerScreen()
+          picturesRoute: (context) => const PicturesScreen(),
+          videosRoute: (context) => const VideosScreen(),
+          addPictureRoute: (context) => AddPictureScreen(),
+          viewPictureRoute: (context) => const ViewVideosScreen(),
+          addVideoRoute: (context) => AddVideoScreen(),
+          aboutRoute: (context) => const AboutScreen(),
         },
       ),
     );

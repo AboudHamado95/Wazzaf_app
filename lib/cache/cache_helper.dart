@@ -38,7 +38,6 @@ class CacheHelper {
   static signOut(context) {
     CacheHelper.removeData(key: 'uId').then((value) {
       if (value) {
-        CareerCubit.get(context).close();  
         navigateAndFinish(context, loginRoute);
       }
     });

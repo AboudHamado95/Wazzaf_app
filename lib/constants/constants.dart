@@ -1,6 +1,6 @@
 //global key for auth
 import 'package:wazzaf/models/user_model.dart';
-import 'package:wazzaf/models/worker_model.dart';
+import 'package:wazzaf/models/user_model.dart';
 
 String? uId;
 
@@ -31,4 +31,9 @@ const workersRoute = 'workers_screen';
 const updateDataRoute = 'update_data_screen';
 const chatDetailsRoute = 'chat_details_screen';
 const chatsRoute = 'chats_screen';
-const pickerRoute = 'picker_screen';
+const picturesRoute = 'pictures_screen';
+const videosRoute = 'video_screen';
+const addPictureRoute = 'add_pictures_screen';
+const viewPictureRoute = 'view_picture_screen';
+const addVideoRoute = 'add_video_screen';
+const aboutRoute = 'about_screen';

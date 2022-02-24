@@ -49,6 +49,7 @@ Widget defaultFormFeild({
         if (value!.isEmpty) {
           return returnValidate;
         }
+        return null;
       },
       onFieldSubmitted: (text) {
         onSubmit!(text);
@@ -104,15 +105,13 @@ Widget myDivider() => Padding(
         color: Colors.grey[300],
       ),
     );
-
-Image getCareerImage(String image) {
+Image getLogoIcon(String _icon) {
   String path = 'assets/images/';
-  String imageExtension = ".jpg";
+  String imageExtension = ".png";
   return Image.asset(
-    path + image + imageExtension,
-    width: 100.0,
-    height: 100.0,
-    fit: BoxFit.cover,
+    path + _icon + imageExtension,
+    width: 100,
+    height: 100,
   );
 }
 

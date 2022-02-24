@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:wazzaf/cache/cache_helper.dart';
 
 import 'package:wazzaf/components/components.dart';
@@ -45,13 +46,21 @@ class PhoneAuth extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        defaultFormFeild(
-                            controller: phoneController,
-                            type: TextInputType.phone,
-                            returnValidate: 'الرجاء إدخال الرقم!',
-                            onSubmit: (text) {},
-                            label: 'الرقم',
-                            prefix: Icons.phone),
+                        IntlPhoneField(
+                          textAlign: TextAlign.start,
+                          searchText: 'ابحث عن الدولة',
+                          decoration: const InputDecoration(
+                            labelText: 'رقم الهاتف',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                          ),
+                          initialCountryCode: 'IN',
+                          onChanged: (phone) {
+                            _cubit.phoneAuth = phone.completeNumber;
+                            print(phone.completeNumber);
+                          },
+                        ),
                         const SizedBox(height: 15.0),
                         Conditional.single(
                             context: context,
@@ -60,35 +69,25 @@ class PhoneAuth extends StatelessWidget {
                             },
                             widgetBuilder: (context) => defaultButton(
                                   function: () async {
-                                    if (formKey.currentState!.validate()) {
-                                      bool phoneUser;
-                                      bool phoneWorker;
-                                      phoneUser = _cubit.usersList.any(
-                                          (element) =>
-                                              element.phone ==
-                                              phoneController.text);
-                                      phoneWorker = _cubit.workersList.any(
-                                          (element) =>
-                                              element.phone! ==
-                                              phoneController.text);
-                                      if (phoneUser) {
-                                        // _cubit.getUser(
-                                        //     phoneController.text.trim());
-                                        LoginCubit.get(context)
-                                            .userLoginWithPhoneNumber(
-                                                phoneNumber:
-                                                    phoneController.text);
-                                      } else if (phoneWorker) {
-                                        _cubit.getWorker(
-                                            phoneController.text.trim());
-                                        LoginCubit.get(context)
-                                            .workerLoginWithPhoneNumber(
-                                                phoneNumber:
-                                                    phoneController.text);
-                                      } else {
-                                        showToast(
-                                            message: 'الرقم غير موجود',
-                                            state: ToastStates.ERROR);
+                                    if (_cubit.phoneAuth != null) {
+                                      if (formKey.currentState!.validate()) {
+                                        bool phoneUser;
+                                        phoneUser = _cubit.usersList.any(
+                                            (element) =>
+                                                element.phone ==
+                                                _cubit.phoneAuth);
+
+                                        if (phoneUser) {
+                                          _cubit.getUser(_cubit.phoneAuth!);
+                                          LoginCubit.get(context)
+                                              .userLoginWithPhoneNumber(
+                                                  phoneNumber:
+                                                      _cubit.phoneAuth!);
+                                        } else {
+                                          showToast(
+                                              message: 'الرقم غير موجود',
+                                              state: ToastStates.ERROR);
+                                        }
                                       }
                                     }
                                   },

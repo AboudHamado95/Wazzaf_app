@@ -4,6 +4,10 @@ class UserModel {
   String? email;
   String? phone;
   String? city;
+  String? literal;
+  String? image;
+  double? latitude;
+  double? longitude;
   bool? isAdmin;
 
   UserModel({
@@ -12,7 +16,10 @@ class UserModel {
     this.email,
     this.phone,
     this.city,
-    
+    this.literal,
+    this.image,
+    this.latitude,
+    this.longitude,
     this.isAdmin,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +28,10 @@ class UserModel {
     email = json['email'];
     phone = json['phone'];
     city = json['city'];
+    literal = json['literal'];
+    image = json['image'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     isAdmin = json['isAdmin'];
   }
   Map<String, dynamic> toMap() {
@@ -30,7 +41,11 @@ class UserModel {
       'email': email,
       'phone': phone,
       'city': city,
-      'isAdmin': isAdmin
+      'literal': literal,
+      'image': image,
+      'isAdmin': isAdmin,
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 }

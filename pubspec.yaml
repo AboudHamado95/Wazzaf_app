@@ -11,24 +11,32 @@ environment:
 dependencies:
   bloc: ^8.0.2
   cached_network_image: ^3.2.0
+  chewie: ^1.3.0
   cloud_firestore: ^3.1.6
   cupertino_icons: ^1.0.2
+  fijkplayer: ^0.10.1
+  file_picker: ^4.4.0
   firebase_auth: ^3.3.5
   firebase_core: ^1.11.0
+  firebase_core_platform_interface: ^4.2.4
   firebase_storage: ^10.2.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
   flutter_conditional_rendering: ^2.0.0
   flutter_dropdown: ^1.0.0+hotfix.1
-  flutter_polyline_points: ^1.0.0
   fluttertoast: ^8.0.8
   geolocator: ^8.0.3
   google_maps_flutter: ^2.1.1
   hexcolor: ^2.0.6
   image_picker: ^0.8.4+5
+  intl_phone_field: ^3.0.1
+  path_provider: ^2.0.9
+  permission_handler: ^9.1.0
   reorderableitemsview: ^2.0.1
   shared_preferences: ^2.0.12
+  stacked: ^2.2.8
+  video_player: ^2.2.18
 
 dev_dependencies:
   flutter_lints: ^1.0.0

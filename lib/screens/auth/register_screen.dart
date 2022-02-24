@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:wazzaf/cache/cache_helper.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:wazzaf/components/components.dart';
@@ -127,14 +128,6 @@ class RegisterScreen extends StatelessWidget {
                               prefix: Icons.email),
                           const SizedBox(height: 15.0),
                           defaultFormFeild(
-                              controller: phoneController,
-                              type: TextInputType.phone,
-                              returnValidate: 'الرجاء إدخال رقم الهاتف',
-                              onSubmit: (text) {},
-                              label: 'رقم الهاتف',
-                              prefix: Icons.phone),
-                          const SizedBox(height: 15.0),
-                          defaultFormFeild(
                               controller: passwordController,
                               type: TextInputType.visiblePassword,
                               suffix: RegisterCubit.get(context).suffix,
@@ -147,7 +140,32 @@ class RegisterScreen extends StatelessWidget {
                               returnValidate: "كلمة السر صغيرة جدا",
                               label: 'كلمة السر',
                               prefix: Icons.lock_outline),
+
+                          // defaultFormFeild(
+                          //     controller: phoneController,
+                          //     type: TextInputType.phone,
+                          //     returnValidate: 'الرجاء إدخال رقم الهاتف',
+                          //     onSubmit: (text) {},
+                          //     label: 'رقم الهاتف',
+                          //     prefix: Icons.phone),
+                          // const SizedBox(height: 15.0),
+
                           const SizedBox(height: 15.0),
+                          IntlPhoneField(
+                            textAlign: TextAlign.start,
+                            searchText: 'ابحث عن الدولة',
+                            decoration: const InputDecoration(
+                              labelText: 'رقم الهاتف',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                              ),
+                            ),
+                            initialCountryCode: 'IN',
+                            onChanged: (phone) {
+                              _cubit.phoneAuth = phone.completeNumber;
+                              print(phone.completeNumber);
+                            },
+                          ),
                           defaultFormFeild(
                               controller: cityController,
                               type: TextInputType.emailAddress,
@@ -192,25 +210,24 @@ class RegisterScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 15.0),
-                                Row(
-                                  children: [
-                                    const SizedBox(width: 10.0),
-                                    const Icon(
-                                      Icons.location_on,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 8.0),
-                                    Expanded(
-                                      child: defaultButton(
-                                          function: () =>
-                                              locatePoistion(_cubit),
-                                          text: 'حدد موقعك',
-                                          backgound: Colors.amber),
-                                    )
-                                  ],
-                                )
                               ],
                             ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 10.0),
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 8.0),
+                              Expanded(
+                                child: defaultButton(
+                                    function: () => locatePoistion(_cubit),
+                                    text: 'حدد موقعك',
+                                    backgound: Colors.amber),
+                              )
+                            ],
+                          ),
                           const SizedBox(height: 15.0),
                           Conditional.single(
                               context: context,
@@ -219,22 +236,23 @@ class RegisterScreen extends StatelessWidget {
                               },
                               widgetBuilder: (context) => defaultButton(
                                     function: () {
-                                      if (RegisterCubit.get(context).literal) {
+                                      if ((_cubit.latitude == null &&
+                                              _cubit.longitude == null) &&
+                                          _cubit.phoneAuth != null) {
+                                        showToast(
+                                            message: 'يرجى تحديد الموقع',
+                                            state: ToastStates.WARNING);
+                                      } else {
                                         if (formKey.currentState!.validate()) {
-                                          if (_cubit.latitude == null &&
-                                              _cubit.longitude == null) {
-                                            showToast(
-                                                message: 'يرجى تحديد الموقع',
-                                                state: ToastStates.WARNING);
-                                          } else {
+                                          if (RegisterCubit.get(context)
+                                              .literal) {
                                             RegisterCubit.get(context)
                                                 .userRegister(
                                                     name: nameController.text
                                                         .trim(),
                                                     email: emailController.text
                                                         .trim(),
-                                                    phone: phoneController.text
-                                                        .trim(),
+                                                    phone: _cubit.phoneAuth!,
                                                     password: passwordController
                                                         .text
                                                         .trim(),
@@ -244,23 +262,20 @@ class RegisterScreen extends StatelessWidget {
                                                     lat: _cubit.latitude!,
                                                     literal:
                                                         _cubit.literalCheck!);
+                                          } else {
+                                            RegisterCubit.get(context)
+                                                .userRegister(
+                                              name: nameController.text.trim(),
+                                              email:
+                                                  emailController.text.trim(),
+                                              password: passwordController.text
+                                                  .trim(),
+                                              phone: _cubit.phoneAuth!,
+                                              city: cityController.text.trim(),
+                                              lan: _cubit.longitude!,
+                                              lat: _cubit.latitude!,
+                                            );
                                           }
-                                        }
-                                      } else {
-                                        if (formKey.currentState!.validate()) {
-                                          RegisterCubit.get(context)
-                                              .userRegister(
-                                                  name: nameController.text
-                                                      .trim(),
-                                                  email: emailController.text
-                                                      .trim(),
-                                                  password: passwordController
-                                                      .text
-                                                      .trim(),
-                                                  phone: phoneController.text
-                                                      .trim(),
-                                                  city: cityController.text
-                                                      .trim());
                                         }
                                       }
                                     },
