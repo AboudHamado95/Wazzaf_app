@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_conditional_rendering/conditional.dart';
+
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 import 'package:wazzaf/models/message_model.dart';
@@ -9,9 +11,14 @@ import 'package:wazzaf/styles/colors/colors.dart';
 
 // ignore: must_be_immutable
 class ChatDetails extends StatelessWidget {
-  final UserModel userModel;
+  final UserModel receiver;
+  final UserModel sender;
 
-  ChatDetails({Key? key, required this.userModel}) : super(key: key);
+  ChatDetails({
+    Key? key,
+    required this.receiver,
+    required this.sender,
+  }) : super(key: key);
   TextEditingController messageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -19,7 +26,7 @@ class ChatDetails extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Builder(
         builder: (context) {
-          CareerCubit.get(context).getMessages(receivedId: userModel.uId!);
+          CareerCubit.get(context).getMessages(receivedId: receiver.uId!);
           return BlocConsumer<CareerCubit, CareerStates>(
             listener: (context, state) {},
             builder: (context, state) {
@@ -32,12 +39,12 @@ class ChatDetails extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 20.0,
-                          backgroundImage: NetworkImage(userModel.image!),
+                          backgroundImage: NetworkImage(receiver.image!),
                         ),
                         const SizedBox(
                           width: 15.0,
                         ),
-                        Text(userModel.name!),
+                        Text(receiver.name!),
                       ],
                     ),
                   ),
@@ -55,7 +62,7 @@ class ChatDetails extends StatelessWidget {
                                   var message =
                                       CareerCubit.get(context).messages[index];
                                   if (_cubit.userModel!.uId ==
-                                      message.receiverId) {
+                                      message.senderId) {
                                     return buildMessage(message);
                                   } else {
                                     return buildMyMessage(message);
@@ -90,7 +97,8 @@ class ChatDetails extends StatelessWidget {
                                     child: MaterialButton(
                                       onPressed: () async {
                                         await _cubit.sendMessage(
-                                            receivedId: userModel.uId!,
+                                            receiver: receiver.name!,
+                                            receivedId: receiver.uId!,
                                             dateTime: DateTime.now().toString(),
                                             text: messageController.text);
                                         messageController.clear();
@@ -124,9 +132,9 @@ class ChatDetails extends StatelessWidget {
         child: Container(
             padding:
                 const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: const BorderRadiusDirectional.only(
+            decoration:const BoxDecoration(
+                color: Color.fromARGB(255, 6, 241, 17),
+                borderRadius:  BorderRadiusDirectional.only(
                     bottomEnd: Radius.circular(10.0),
                     bottomStart: Radius.circular(10.0),
                     topEnd: Radius.circular(10.0))),

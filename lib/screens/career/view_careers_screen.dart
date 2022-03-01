@@ -24,6 +24,7 @@ class MainScreen extends StatelessWidget {
           CareerCubit.get(context).getUserData();
           CareerCubit.get(context).getCareers();
           CareerCubit.get(context).getUsersData();
+          CareerCubit.get(context).getUsersForChat();
 
           return BlocConsumer<CareerCubit, CareerStates>(
             listener: (context, state) {},
@@ -176,8 +177,6 @@ void showDialogToWorkers(
       builder: (context) {
         return const ProgressDialog(message: 'الرجاء الانتظار');
       });
-  await cubit.getUserData();
-  await cubit.getUsersData();
   await cubit.filterUsers(career.name!);
   Navigator.of(context).pop();
   Navigator.pushNamed(context, route);

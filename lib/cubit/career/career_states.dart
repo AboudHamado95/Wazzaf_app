@@ -219,6 +219,28 @@ class UpdateUserDataErrorState extends CareerStates {
 
   UpdateUserDataErrorState(this.error);
 }
+
+//**************Change Rate Worker state */
+
+class ChangeRateWorkerState extends CareerStates {}
+
+//**************Add Rate Worker state */
+
+class AddRateWorkerLoadingState extends CareerStates {}
+
+class AddRateWorkerSuccessState extends CareerStates {}
+
+class AddRateWorkerErrorState extends CareerStates {}
+
+//**************Get Rating Worker List state */
+
+class GetRatingWorkerLoadingState extends CareerStates {}
+
+class GetRatingWorkerSuccessState extends CareerStates {}
+
+class GetRatingWorkerErrorState extends CareerStates {}
+
+
 //**************Change Drop down state */
 
 class ChangeDropDownState extends CareerStates {}

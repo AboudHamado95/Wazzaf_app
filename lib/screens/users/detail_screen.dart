@@ -9,6 +9,7 @@ import 'dart:ui' as ui;
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 import 'package:wazzaf/models/career_model.dart';
+import 'package:wazzaf/screens/chat/chat_details.dart';
 import 'package:wazzaf/widgets/show_dialog.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -23,8 +24,8 @@ class DetailScreen extends StatelessWidget {
     await cubit.getUserData();
     await cubit.getUsersData();
     await cubit.filterUsers(cubit.userModel!.literal);
-    await cubit.handleTap(LatLng(cubit.filterUserModel!.latitude!,
-        cubit.filterUserModel!.longitude!));
+    await cubit.handleTap(LatLng(
+        cubit.filterUserModel!.latitude!, cubit.filterUserModel!.longitude!));
     Navigator.of(context).pop();
     navigateTo(context, locationRoute);
   }
@@ -35,11 +36,10 @@ class DetailScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var _cubit = CareerCubit.get(context);
-        final routeArg = ModalRoute.of(context)?.settings.arguments as String;
-        String literalRoute = routeArg;
-
         Future<bool> _onWillPop() async {
-          await _cubit.filterUsers(routeArg);
+          await _cubit.getUsersData();
+          await _cubit.filterUsers(_cubit.filterUserModel!.literal);
+          _cubit.getUserForRating();
           await Navigator.of(context)
               .pushNamedAndRemoveUntil(workersRoute, (route) => false);
 
@@ -55,6 +55,39 @@ class DetailScreen extends StatelessWidget {
               child: SafeArea(
                 child: Scaffold(
                   appBar: AppBar(
+                    actions: [
+                      if (_cubit.filterUserModel!.uId! !=
+                          _cubit.userModel!.uId!)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () async =>
+                                    navigateTo(context, rateRoute),
+                                icon: const Icon(Icons.star_border_outlined),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await CareerCubit.get(context)
+                                      .getUsersForChat();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return ChatDetails(
+                                            receiver: _cubit.filterUserModel!,
+                                            sender: _cubit.userModel!);
+                                      },
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.message_rounded),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
                     backgroundColor: Colors.amber[100],
                     title: const Text('تفاصيل العامل'),
                     elevation: 0.0,
@@ -85,8 +118,8 @@ class DetailScreen extends StatelessWidget {
                                   ),
                                   CircleAvatar(
                                     radius: 60.0,
-                                    backgroundColor:
-                                        Theme.of(context).scaffoldBackgroundColor,
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(60.0),
                                       child: CachedNetworkImage(
@@ -154,7 +187,7 @@ class DetailScreen extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () => Navigator.pushNamed(
                                 context, updateDataRoute,
-                                arguments: literalRoute),
+                                arguments: _cubit.filterUserModel!.literal),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: const [
@@ -172,12 +205,15 @@ class DetailScreen extends StatelessWidget {
                                   )
                                 : ElevatedButton(
                                     onPressed: () async {
-                                      Navigator.pushNamed(context, picturesRoute,
-                                          arguments: literalRoute);
+                                      Navigator.pushNamed(
+                                          context, picturesRoute,
+                                          arguments:
+                                              _cubit.filterUserModel!.literal);
                                     },
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: const [
                                         Icon(Icons.picture_in_picture_rounded),
                                         SizedBox(
@@ -192,8 +228,9 @@ class DetailScreen extends StatelessWidget {
                             ),
                             ElevatedButton(
                               onPressed: () async {
+                                await _cubit.getVideos();
                                 Navigator.pushNamed(context, videosRoute,
-                                    arguments: literalRoute);
+                                    arguments: _cubit.filterUserModel!.literal);
                               },
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,

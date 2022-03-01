@@ -21,7 +21,7 @@ class PicturesScreen extends StatelessWidget {
         listener: ((context, state) {}),
         builder: (context, state) {
           var _cubit = CareerCubit.get(context);
-
+         
           return SafeArea(
             child: Scaffold(
               appBar: PreferredSize(
@@ -54,7 +54,8 @@ class PicturesScreen extends StatelessWidget {
                       mainAxisSpacing: 1),
                   itemCount: _cubit.picturesList.length,
                   itemBuilder: (BuildContext ctx, index) {
-                    return itemList(context, _cubit.picturesList[index], _cubit);
+                    return itemList(
+                        context, _cubit.picturesList[index], _cubit);
                   },
                 ),
               ),

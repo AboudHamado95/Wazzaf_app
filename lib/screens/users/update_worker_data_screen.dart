@@ -52,17 +52,17 @@ class UpdateDataScreen extends StatelessWidget {
         });
     if (cubit.updateLat != null && cubit.updateLong != null) {
       await cubit.updateUser(
-        id: cubit.filterUserModel!.uId!,
-        name: nameController.text.trim(),
-        image: cubit.filterUserModel!.image!,
-        email: cubit.filterUserModel!.email!,
-        phone: phoneController.text.trim(),
-        city: cityController.text.trim(),
-        literal: cubit.literalCheck ?? cubit.filterUserModel!.literal!,
-        latitude: cubit.updateLat!,
-        longitude: cubit.updateLong!,
-        isAdmin: cubit.filterUserModel!.isAdmin!,
-      );
+          id: cubit.filterUserModel!.uId!,
+          name: nameController.text.trim(),
+          image: cubit.filterUserModel!.image!,
+          email: cubit.filterUserModel!.email!,
+          phone: phoneController.text.trim(),
+          city: cityController.text.trim(),
+          literal: cubit.literalCheck ?? cubit.filterUserModel!.literal!,
+          latitude: cubit.updateLat!,
+          longitude: cubit.updateLong!,
+          isAdmin: cubit.filterUserModel!.isAdmin!,
+          rating: cubit.filterUserModel!.rating!);
     } else {
       await cubit.updateUser(
           id: cubit.filterUserModel!.uId!,
@@ -74,7 +74,8 @@ class UpdateDataScreen extends StatelessWidget {
           literal: cubit.literalCheck ?? cubit.filterUserModel!.literal!,
           latitude: cubit.filterUserModel!.latitude!,
           longitude: cubit.filterUserModel!.longitude!,
-          isAdmin: cubit.filterUserModel!.isAdmin!);
+          isAdmin: cubit.filterUserModel!.isAdmin!,
+          rating: cubit.filterUserModel!.rating!);
     }
   }
 
@@ -95,7 +96,8 @@ class UpdateDataScreen extends StatelessWidget {
           literal: cubit.literalCheck ?? cubit.filterUserModel!.literal!,
           latitude: cubit.updateLat,
           longitude: cubit.updateLong,
-          isAdmin: cubit.filterUserModel!.isAdmin!);
+          isAdmin: cubit.filterUserModel!.isAdmin!,
+          rating: cubit.filterUserModel!.rating!);
     } else {
       await cubit.uploadUserImage(
           id: cubit.filterUserModel!.uId!,
@@ -106,7 +108,8 @@ class UpdateDataScreen extends StatelessWidget {
           literal: cubit.literalCheck ?? cubit.filterUserModel!.literal!,
           latitude: cubit.filterUserModel!.latitude,
           longitude: cubit.filterUserModel!.longitude,
-          isAdmin: cubit.filterUserModel!.isAdmin!);
+          isAdmin: cubit.filterUserModel!.isAdmin!,
+          rating: cubit.filterUserModel!.rating!);
     }
   }
 
@@ -179,8 +182,8 @@ class UpdateDataScreen extends StatelessWidget {
                                   ),
                                   CircleAvatar(
                                     radius: 60.0,
-                                    backgroundColor:
-                                        Theme.of(context).scaffoldBackgroundColor,
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor,
                                     child: _cubit.userImage == null
                                         ? CircleAvatar(
                                             radius: 60.0,
@@ -199,7 +202,8 @@ class UpdateDataScreen extends StatelessWidget {
                                                 errorWidget: (context, url,
                                                         error) =>
                                                     const Center(
-                                                        child: Icon(Icons.error)),
+                                                        child:
+                                                            Icon(Icons.error)),
                                                 width: 100,
                                                 height: 100.0,
                                                 fit: BoxFit.cover,
@@ -297,8 +301,8 @@ class UpdateDataScreen extends StatelessWidget {
                           items: _cubit.careersList.map((element) {
                             return element.name!;
                           }).toList(),
-                          icon:
-                              const Icon(Icons.expand_more, color: Colors.amber),
+                          icon: const Icon(Icons.expand_more,
+                              color: Colors.amber),
                           customWidgets: _cubit.careersList.map((element) {
                             return customRowForDropDawn(element.name!);
                           }).toList(),

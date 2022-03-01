@@ -7,13 +7,12 @@ import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/bloc_observe.dart';
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/login/login_cubit.dart';
-import 'package:wazzaf/cubit/register/register_cubit.dart';
-import 'package:wazzaf/models/user_model.dart';
 import 'package:wazzaf/models/user_model.dart';
 import 'package:wazzaf/screens/career/add_career_screen.dart';
 import 'package:wazzaf/screens/picture/add_picture_screen.dart';
 import 'package:wazzaf/screens/users/about_screen.dart';
 import 'package:wazzaf/screens/users/detail_screen.dart';
+import 'package:wazzaf/screens/users/rating_screen.dart';
 import 'package:wazzaf/screens/users/update_worker_data_screen.dart';
 import 'package:wazzaf/screens/users/workers_screen.dart';
 import 'package:wazzaf/screens/video/add_video_screen.dart';
@@ -74,11 +73,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-            create: (context) => CareerCubit()
-              ..getUserData()
-              ..getCareers()
-              ..getUsersData()),
+        BlocProvider(create: (context) => CareerCubit()),
         BlocProvider(
           create: (context) => LoginCubit()
             ..getUsers()
@@ -105,14 +100,17 @@ class MyApp extends StatelessWidget {
           updateDataRoute: (context) => UpdateDataScreen(),
           phoneRoute: (context) => PhoneAuth(),
           chatsRoute: (context) => const ChatsScreen(),
-          chatDetailsRoute: (context) =>
-              ChatDetails(userModel: CareerCubit.get(context).userModel!),
+          chatDetailsRoute: (context) => ChatDetails(
+                receiver: CareerCubit.get(context).filterUserModel!,
+                sender: CareerCubit.get(context).userModel!,
+              ),
           picturesRoute: (context) => const PicturesScreen(),
           videosRoute: (context) => const VideosScreen(),
           addPictureRoute: (context) => AddPictureScreen(),
-          viewPictureRoute: (context) => const ViewVideosScreen(),
+          viewPictureRoute: (context) => const ViewPicturesScreen(),
           addVideoRoute: (context) => AddVideoScreen(),
           aboutRoute: (context) => const AboutScreen(),
+          rateRoute: (context) => RateScreen(),
         },
       ),
     );

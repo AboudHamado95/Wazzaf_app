@@ -12,6 +12,7 @@ class SearchWorkerScreen extends StatelessWidget {
     return BlocConsumer<CareerCubit, CareerStates>(
       listener: (context, state) {},
       builder: (context, state) {
+       // final routeArg = ModalRoute.of(context)?.settings.arguments as String;
         var _cubit = CareerCubit.get(context);
         return Directionality(
           textDirection: TextDirection.rtl,

@@ -59,7 +59,7 @@ class AddVideoScreen extends StatelessWidget {
                           _cubit.uploadVideo();
                         } else {
                           showToast(
-                              message: 'الرجاء إدخال صورة',
+                              message: 'الرجاء إدخال الفيديو',
                               state: ToastStates.WARNING);
                         }
                       },

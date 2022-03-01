@@ -55,15 +55,17 @@ class RegisterCubit extends Cubit<RegisterStates> {
         .then((value) {
       print(value.user!.email);
       print(value.user!.uid);
+
       userCreate(
-          uId: value.user!.uid,
-          name: name,
-          email: email,
-          phone: phone,
-          city: city,
-          lan: lan,
-          lat: lat,
-          literal: literal);
+        uId: value.user!.uid,
+        name: name,
+        email: email,
+        phone: phone,
+        city: city,
+        lan: lan,
+        lat: lat,
+        literal: literal,
+      );
     }).catchError((error) {
       emit(RegisterErrorState(error));
     });
@@ -88,18 +90,20 @@ class RegisterCubit extends Cubit<RegisterStates> {
     bool isAdmin = false;
     String image =
         'https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png';
+    double rating = 0.0;
     if (literal == '') {
       UserModel model = UserModel(
           uId: uId,
-        name: name,
-        email: email,
-        phone: phone,
-        city: city,
-        literal: 'مستخدم عادي',
-        image: image,
-        isAdmin: isAdmin,
-        latitude: lat,
-        longitude: lan,);
+          name: name,
+          email: email,
+          phone: phone,
+          city: city,
+          literal: 'مستخدم عادي',
+          image: image,
+          isAdmin: isAdmin,
+          latitude: lat,
+          longitude: lan,
+          rating: rating);
 
       await FirebaseFirestore.instance
           .collection('users')
@@ -122,6 +126,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         isAdmin: isAdmin,
         latitude: lat,
         longitude: lan,
+        rating: rating
       );
 
       await FirebaseFirestore.instance

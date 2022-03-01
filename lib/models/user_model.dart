@@ -9,6 +9,7 @@ class UserModel {
   double? latitude;
   double? longitude;
   bool? isAdmin;
+  double? rating;
 
   UserModel({
     this.uId,
@@ -21,6 +22,7 @@ class UserModel {
     this.latitude,
     this.longitude,
     this.isAdmin,
+    this.rating,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     uId = json['uId'];
@@ -33,6 +35,7 @@ class UserModel {
     latitude = json['latitude'];
     longitude = json['longitude'];
     isAdmin = json['isAdmin'];
+    rating = json['rating'];
   }
   Map<String, dynamic> toMap() {
     return {
@@ -46,6 +49,7 @@ class UserModel {
       'isAdmin': isAdmin,
       'latitude': latitude,
       'longitude': longitude,
+      'rating': rating,
     };
   }
 }

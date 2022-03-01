@@ -5,8 +5,8 @@ import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 
-class ViewVideosScreen extends StatelessWidget {
-  const ViewVideosScreen({Key? key}) : super(key: key);
+class ViewPicturesScreen extends StatelessWidget {
+  const ViewPicturesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -142,14 +142,7 @@ class RegisterScreen extends StatelessWidget {
                                 label: 'كلمة السر',
                                 prefix: Icons.lock_outline),
             
-                            // defaultFormFeild(
-                            //     controller: phoneController,
-                            //     type: TextInputType.phone,
-                            //     returnValidate: 'الرجاء إدخال رقم الهاتف',
-                            //     onSubmit: (text) {},
-                            //     label: 'رقم الهاتف',
-                            //     prefix: Icons.phone),
-                            // const SizedBox(height: 15.0),
+                        
             
                             const SizedBox(height: 15.0),
                             IntlPhoneField(

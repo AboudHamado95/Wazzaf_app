@@ -21,6 +21,7 @@ class WorkersScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var _cubit = CareerCubit.get(context);
+
         Future<bool> _onWillPop() async {
           await Navigator.of(context)
               .pushNamedAndRemoveUntil(mainRoute, (route) => false);
@@ -29,36 +30,31 @@ class WorkersScreen extends StatelessWidget {
 
         return WillPopScope(
           onWillPop: _onWillPop,
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: SafeArea(
-              child: Scaffold(
-                  appBar: AppBar(
-                    title: const Text('العمال'),
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 2.0),
-                        child: IconButton(
-                            onPressed: () async {
-                              await CareerCubit.get(context).getUsersForChat();
-                              navigateTo(context, chatsRoute);
-                            },
-                            icon: const Icon(Icons.message_rounded)),
-                      ),
-                      IconButton(
-                        onPressed: () => navigateTo(context, searchWorkerRoute),
-                        icon: const Icon(Icons.search),
-                        padding: const EdgeInsets.all(16.0),
-                      )
-                    ],
-                  ),
-                  drawer: DrawerWidget(
-                    cubit: _cubit,
-                  ),
-                  body: workerBuilder(context, _cubit.usersList, _cubit,
-                      _cubit.usersFilterList!)),
-            ),
-          ),
+          child: Builder(builder: (context) {
+            //_cubit.filterUsers(careerName);
+            return Directionality(
+              textDirection: TextDirection.rtl,
+              child: SafeArea(
+                child: Scaffold(
+                    appBar: AppBar(
+                      title: const Text('العمال'),
+                      actions: [
+                        IconButton(
+                          onPressed: () =>
+                              navigateTo(context, searchWorkerRoute),
+                          icon: const Icon(Icons.search),
+                          padding: const EdgeInsets.all(16.0),
+                        )
+                      ],
+                    ),
+                    drawer: DrawerWidget(
+                      cubit: _cubit,
+                    ),
+                    body: workerBuilder(context, _cubit.usersList, _cubit,
+                        _cubit.usersFilterList!)),
+              ),
+            );
+          }),
         );
       },
     );
@@ -71,8 +67,7 @@ Widget buildWorkerItem(context, UserModel worker, CareerCubit _cubit) =>
         await _cubit.filterUser(worker.name!);
         await _cubit.locationFunction();
         await _cubit.getPicturesJob();
-        await _cubit.getVideos();
-        Navigator.pushNamed(context, detailRoute, arguments: worker.literal);
+        Navigator.pushNamed(context, detailRoute);
       },
       borderRadius: BorderRadius.circular(16.0),
       child: Padding(
@@ -97,7 +92,6 @@ Widget buildWorkerItem(context, UserModel worker, CareerCubit _cubit) =>
                   height: 100.0,
                   fit: BoxFit.cover,
                 ),
-                // getCareerImage('omal'),
               ),
             ),
             const SizedBox(
@@ -108,11 +102,29 @@ Widget buildWorkerItem(context, UserModel worker, CareerCubit _cubit) =>
                 height: 120.0,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    '${worker.name}',
-                    style: Theme.of(context).textTheme.bodyText1,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${worker.name}',
+                        style: Theme.of(context).textTheme.bodyText1,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(worker.rating!.toStringAsFixed(2))
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),

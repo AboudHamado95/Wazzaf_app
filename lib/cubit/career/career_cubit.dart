@@ -13,6 +13,7 @@ import 'package:wazzaf/cubit/career/career_states.dart';
 import 'package:wazzaf/models/career_model.dart';
 import 'package:wazzaf/models/message_model.dart';
 import 'package:wazzaf/models/picture_model.dart';
+import 'package:wazzaf/models/rating_model.dart';
 import 'package:wazzaf/models/video_model.dart';
 import 'package:wazzaf/models/user_model.dart';
 
@@ -121,6 +122,7 @@ class CareerCubit extends Cubit<CareerStates> {
       usersFilterList = usersList
           .where((element) => element.literal == value.docs[0].data()['name'])
           .toList();
+      print('sssssssssssssssssssssss${usersFilterList![0].rating}');
       emit(FilterUserSuccessState());
     }).catchError((error) {
       emit(FilterUserErrorState(error.toString()));
@@ -140,6 +142,7 @@ class CareerCubit extends Cubit<CareerStates> {
     required String city,
     required String literal,
     required bool isAdmin,
+    required double rating,
     double? latitude,
     double? longitude,
   }) async {
@@ -164,6 +167,7 @@ class CareerCubit extends Cubit<CareerStates> {
           latitude: filterUserModel!.latitude!,
           longitude: filterUserModel!.longitude!,
           image: value.toString(),
+          rating: rating,
         );
       }).catchError((error) {
         emit(UploadUserImageErrorState());
@@ -267,7 +271,7 @@ class CareerCubit extends Cubit<CareerStates> {
         videosList.add(VideoModel.fromJson(element.data()));
       }
 
-      print('videooooooooo: ${videosList[0].videoLink}');
+      print('videooooooooo: ${videosList[0].videoLink!}');
       emit(GetVideoJobSuccessState());
     });
     return videosList;
@@ -352,11 +356,137 @@ class CareerCubit extends Cubit<CareerStates> {
       emit(GetPictureJobSuccessState());
     });
   }
-  // List<Widget> tiles = [];
-  // void addPictureToList(Widget picture) {
-  //   tiles.add(picture);
-  //   emit(AddPictureToListState());
-  // }
+
+  double userRating = 3.0;
+
+  Future ratingModel({required String uId, required String rate}) async {
+    var rating = double.parse(rate);
+    if (rating > 5) {
+      userRating = 5;
+    } else if (rating < 0) {
+      userRating = 0;
+    } else {
+      userRating = rating;
+    }
+    emit(AddRateWorkerLoadingState());
+
+    RatingModel model = RatingModel(
+      uId: uId,
+      rate: userRating,
+    );
+
+    if (idRatingList.any((element) => element == userModel!.uId)) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(filterUserModel!.uId)
+          .collection('rate')
+          .doc(userModel!.uId)
+          .update(model.toMap())
+          .then((value) async {
+        emit(AddRateWorkerSuccessState());
+      }).catchError((error) {
+        emit(AddRateWorkerErrorState());
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(filterUserModel!.uId)
+          .collection('rate')
+          .doc(userModel!.uId)
+          .set(model.toMap())
+          .then((value) async {
+        emit(AddRateWorkerSuccessState());
+      }).catchError((error) {
+        emit(AddRateWorkerErrorState());
+      });
+    }
+  }
+
+  List<double> rateList = [];
+  List<String> idRatingList = [];
+
+  Future getUserForRating() async {
+    rateList = [];
+    idRatingList = [];
+    emit(GetRatingWorkerLoadingState());
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(filterUserModel!.uId)
+        .collection('rate')
+        .get()
+        .then((value) {
+      for (var item in value.docs) {
+        rateList.add(item['rate']);
+        idRatingList.add(item['uId']);
+      }
+      List ratings = value.docs.map((e) => e['rate']!).toList();
+      double sum = ratings.fold(0, (p, c) => p + c);
+      double? average;
+      if (sum > 0) {
+        average = sum / ratings.length;
+      }
+      userRating = average!;
+      UserModel model = UserModel(
+        uId: filterUserModel!.uId,
+        name: filterUserModel!.name,
+        email: filterUserModel!.email,
+        phone: filterUserModel!.phone,
+        city: filterUserModel!.city,
+        literal: filterUserModel!.literal,
+        isAdmin: filterUserModel!.isAdmin,
+        latitude: filterUserModel!.latitude!,
+        longitude: filterUserModel!.longitude!,
+        image: filterUserModel!.image,
+        rating: userRating,
+      );
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(filterUserModel!.uId)
+          .update(model.toMap())
+          .then((value) async {
+        emit(UpdateUserDataSuccessState());
+      }).catchError((error) {
+        emit(UpdateUserDataErrorState(error.toString()));
+      });
+
+      emit(GetRatingWorkerSuccessState());
+    }).catchError((error) {
+      emit(GetRatingWorkerErrorState());
+    });
+  }
+  // FirebaseFirestore.instance
+  //     .collection('users')
+  //     .doc(filterUserModel!.uId)
+  //     .collection('rate')
+  //     .get()
+  //     .then((value) {
+  //   for (var item in value.docs) {
+  //     rateList.add(RatingModel.fromJson(item.data()));
+  //   }
+  // });
+  // await getUsersData();
+  // await filterUsers(filterUserModel!.literal);
+  // await filterUser(filterUserModel!.name!);
+  // updateUser(
+  //   id: filterUserModel!.uId!,
+  //   name: filterUserModel!.name!,
+  //   email: filterUserModel!.email!,
+  //   phone: filterUserModel!.phone!,
+  //   city: filterUserModel!.city!,
+  //   literal: filterUserModel!.literal!,
+  //   isAdmin: filterUserModel!.isAdmin!,
+  //   latitude: filterUserModel!.latitude!,
+  //   longitude: filterUserModel!.longitude!,
+  //   image: filterUserModel!.image!,
+  //   rating: userRating,
+  // );
+
+  double changeUserRate(String rate) {
+    print('$userRating');
+
+    emit(ChangeRateWorkerState());
+    return userRating;
+  }
 
   Future updateUser(
       {required String id,
@@ -368,6 +498,7 @@ class CareerCubit extends Cubit<CareerStates> {
       required bool isAdmin,
       required double latitude,
       required double longitude,
+      required double rating,
       String? image}) async {
     emit(UpdateUserDataLoadingState());
     UserModel model = UserModel(
@@ -381,6 +512,7 @@ class CareerCubit extends Cubit<CareerStates> {
       isAdmin: isAdmin,
       latitude: latitude,
       longitude: longitude,
+      rating: rating,
     );
     FirebaseFirestore.instance
         .collection('users')
@@ -500,7 +632,11 @@ class CareerCubit extends Cubit<CareerStates> {
   void getUserSearch(String name) {
     searchUser = [];
     emit(UserSearchLoadingState());
-    FirebaseFirestore.instance.collection('users').get().then((value) {
+    FirebaseFirestore.instance
+        .collection('users')
+        // .where('literal', isEqualTo: name)
+        .get()
+        .then((value) {
       List<UserModel> searchQuery = value.docs
           .where((element) =>
               element['name'].toString().toLowerCase().contains(name))
@@ -514,6 +650,7 @@ class CareerCubit extends Cubit<CareerStates> {
         searchUserModel.image = data.get('image');
         searchUserModel.isAdmin = data.get('isAdmin');
         searchUserModel.email = data.get('email');
+        searchUserModel.rating = data.get('rating');
 
         return searchUserModel;
       }).toList();
@@ -533,14 +670,29 @@ class CareerCubit extends Cubit<CareerStates> {
 
   List<UserModel> users = [];
   Future getUsersForChat() async {
+    users = [];
     emit(CareerGetAllUsersLoadingState());
     if (users.isEmpty) {
-      FirebaseFirestore.instance.collection('users').get().then((value) {
-        for (var element in value.docs) {
-          if (element.data()['uId'] != userModel!.uId) {
-            users.add(UserModel.fromJson(element.data()));
+      FirebaseFirestore.instance.collection('users').get().then((value) async {
+        // List<UserModel> usersSearch = [];
+        for (var value in value.docs) {
+          if (value.data()['uId'] != userModel!.uId) {
+            users.add(UserModel.fromJson(value.data()));
+            // var user = value.data()['uId'];
+            // await getMessages(receivedId: user);
+            // messages
+            //     .where((element) =>
+            //         element.receiverId == user || element.senderId == user)
+            //     .map((e) {
+            //   e.receiverId;
+            //   e.senderId;
+            //   users.add(usersSearch.firstWhere((user) =>
+            //       user.uId == e.receiverId || user.uId == e.senderId));
+            // }).toList();
           }
         }
+        //********** */
+        //*********** */
         emit(CareerGetAllUsersSuccessState());
       }).catchError((error) {
         emit(CareerGetAllUsersErrorState(error.toString()));
@@ -548,13 +700,19 @@ class CareerCubit extends Cubit<CareerStates> {
     }
   }
 
-  Future sendMessage(
-      {required String receivedId,
-      required String dateTime,
-      required String text}) async {
+  void chatUserScreen() {}
+
+  Future sendMessage({
+    required String receivedId,
+    required String dateTime,
+    required String text,
+    required String receiver,
+  }) async {
     MessageModel messageModel = MessageModel(
         senderId: userModel!.uId,
         receiverId: receivedId,
+        receiver: receiver,
+        sendBy: userModel!.name!,
         dateTime: dateTime,
         text: text);
     FirebaseFirestore.instance
@@ -584,7 +742,7 @@ class CareerCubit extends Cubit<CareerStates> {
   }
 
   List<MessageModel> messages = [];
-  void getMessages({required String receivedId}) {
+  Future getMessages({required String receivedId}) async {
     FirebaseFirestore.instance
         .collection('users')
         .doc(userModel!.uId)

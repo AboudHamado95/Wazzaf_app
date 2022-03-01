@@ -68,6 +68,17 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.message_rounded),
+              title: const Text(
+                'صفحة الدردشة',
+                style: TextStyle(fontSize: 16.0),
+              ),
+              onTap: () async {
+                await CareerCubit.get(context).getUsersForChat();
+                navigateTo(context, chatsRoute);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.info),
               title: const Text(
                 'حول التطبيق',
