@@ -3,7 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-void navigateTo(context, routeName,) {
+void navigateTo(
+  context,
+  routeName,
+) {
   Navigator.pushNamed(context, routeName);
 }
 
@@ -46,4 +49,6 @@ enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
   SHOW_OTP_FORM_STATE,
 }
+
+
 

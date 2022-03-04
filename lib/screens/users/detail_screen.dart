@@ -37,11 +37,11 @@ class DetailScreen extends StatelessWidget {
       builder: (context, state) {
         var _cubit = CareerCubit.get(context);
         Future<bool> _onWillPop() async {
-          await _cubit.getUsersData();
           await _cubit.filterUsers(_cubit.filterUserModel!.literal);
           _cubit.getUserForRating();
-          await Navigator.of(context)
-              .pushNamedAndRemoveUntil(workersRoute, (route) => false);
+          await Navigator.of(context).pushNamedAndRemoveUntil(
+              workersRoute, (route) => false,
+              arguments: _cubit.filterUserModel!.literal);
 
           return true;
         }
@@ -88,7 +88,7 @@ class DetailScreen extends StatelessWidget {
                           ),
                         ),
                     ],
-                    backgroundColor: Colors.amber[100],
+                    backgroundColor: Theme.of(context).primaryColor,
                     title: const Text('تفاصيل العامل'),
                     elevation: 0.0,
                   ),
@@ -132,8 +132,8 @@ class DetailScreen extends StatelessWidget {
                                         errorWidget: (context, url, error) =>
                                             const Center(
                                                 child: Icon(Icons.error)),
-                                        width: 100,
-                                        height: 100.0,
+                                        width: 110,
+                                        height: 110.0,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -186,7 +186,7 @@ class DetailScreen extends StatelessWidget {
                                 _cubit.filterUserModel!.uId!)
                           ElevatedButton(
                             onPressed: () => Navigator.pushNamed(
-                                context, updateDataRoute,
+                                context, updateWorkerDataRoute,
                                 arguments: _cubit.filterUserModel!.literal),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,

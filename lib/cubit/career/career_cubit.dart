@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:io';
-
+import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wazzaf/cache/cache_helper.dart';
 import 'package:wazzaf/constants/constants.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 import 'package:wazzaf/models/career_model.dart';
@@ -74,6 +77,47 @@ class CareerCubit extends Cubit<CareerStates> {
   }
 
 //***************************** */
+//Haversine Formula Algorithm
+  double getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * sin(dLon / 2) * sin(dLon / 2);
+    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
+
+  double deg2rad(deg) {
+    return deg * (pi / 180);
+  }
+
+//
+  List<UserModel> destinationlist = [];
+  distanceCalculation(List<UserModel> nearbyList) {
+    destinationlist = [];
+    emit(GetNearestWorkerLoadingState());
+    for (var d in nearbyList) {
+      if (userModel!.uId != d.uId) {
+        double km = getDistanceFromLatLonInKm(
+            userModel!.latitude, userModel!.longitude, d.latitude, d.longitude);
+
+        d.distance = km;
+        destinationlist.add(d);
+        print(getDistanceFromLatLonInKm(userModel!.latitude,
+            userModel!.longitude, d.latitude, d.longitude));
+      }
+    }
+
+    destinationlist.sort((a, b) {
+      return a.distance!.compareTo(b.distance!);
+    });
+    print('$destinationlist[0]');
+    emit(GetNearestWorkerState());
+  }
+
+//***************************** */
   List<UserModel> usersList = [];
 
   Future getUsersData() async {
@@ -110,7 +154,7 @@ class CareerCubit extends Cubit<CareerStates> {
     // emit(FilterUserState());
   }
 
-  List<UserModel>? usersFilterList;
+  List<UserModel> usersFilterList = [];
   Future filterUsers(name) async {
     usersFilterList = [];
     emit(CareerSearchLoadingState());
@@ -122,7 +166,7 @@ class CareerCubit extends Cubit<CareerStates> {
       usersFilterList = usersList
           .where((element) => element.literal == value.docs[0].data()['name'])
           .toList();
-      print('sssssssssssssssssssssss${usersFilterList![0].rating}');
+      print('sssssssssssssssssssssss${usersFilterList[0].rating}');
       emit(FilterUserSuccessState());
     }).catchError((error) {
       emit(FilterUserErrorState(error.toString()));
@@ -271,7 +315,7 @@ class CareerCubit extends Cubit<CareerStates> {
         videosList.add(VideoModel.fromJson(element.data()));
       }
 
-      print('videooooooooo: ${videosList[0].videoLink!}');
+      //  print('videooooooooo: ${videosList[0].videoLink!}');
       emit(GetVideoJobSuccessState());
     });
     return videosList;
@@ -592,7 +636,7 @@ class CareerCubit extends Cubit<CareerStates> {
 
   List<CareerModel> careersList = [];
 
-  void getCareers() {
+  Future getCareers() async {
     careersList = [];
     emit(GetAllCareerLoadingState());
     FirebaseFirestore.instance.collection('careers').get().then((value) {
@@ -629,14 +673,11 @@ class CareerCubit extends Cubit<CareerStates> {
 
   List<UserModel> searchUser = [];
 
-  void getUserSearch(String name) {
+  Future getUserSearch(
+      {required String name, required String nameCareer}) async {
     searchUser = [];
     emit(UserSearchLoadingState());
-    FirebaseFirestore.instance
-        .collection('users')
-        // .where('literal', isEqualTo: name)
-        .get()
-        .then((value) {
+    FirebaseFirestore.instance.collection('users').get().then((value) {
       List<UserModel> searchQuery = value.docs
           .where((element) =>
               element['name'].toString().toLowerCase().contains(name))
@@ -654,11 +695,18 @@ class CareerCubit extends Cubit<CareerStates> {
 
         return searchUserModel;
       }).toList();
-      searchUser = searchQuery;
+      searchUser = searchQuery
+          .where((element) => element.literal == nameCareer)
+          .toList();
       emit(UserSearchSuccessState());
     }).catchError((error) {
       emit(UserSearchErrorState(error.toString()));
     });
+  }
+
+  Future cleanSearchUser() async {
+    searchUser = [];
+    emit(ResetUserSearchState());
   }
 
   String? literalCheck;
@@ -674,25 +722,12 @@ class CareerCubit extends Cubit<CareerStates> {
     emit(CareerGetAllUsersLoadingState());
     if (users.isEmpty) {
       FirebaseFirestore.instance.collection('users').get().then((value) async {
-        // List<UserModel> usersSearch = [];
         for (var value in value.docs) {
-          if (value.data()['uId'] != userModel!.uId) {
+          if (value.data()['uId'] != userModel!.uId &&
+              value.data()['name'] != 'إدارة التطبيق') {
             users.add(UserModel.fromJson(value.data()));
-            // var user = value.data()['uId'];
-            // await getMessages(receivedId: user);
-            // messages
-            //     .where((element) =>
-            //         element.receiverId == user || element.senderId == user)
-            //     .map((e) {
-            //   e.receiverId;
-            //   e.senderId;
-            //   users.add(usersSearch.firstWhere((user) =>
-            //       user.uId == e.receiverId || user.uId == e.senderId));
-            // }).toList();
           }
         }
-        //********** */
-        //*********** */
         emit(CareerGetAllUsersSuccessState());
       }).catchError((error) {
         emit(CareerGetAllUsersErrorState(error.toString()));
@@ -700,7 +735,44 @@ class CareerCubit extends Cubit<CareerStates> {
     }
   }
 
-  void chatUserScreen() {}
+  Future chatWithAdmin({
+    required String receivedId,
+    required String dateTime,
+    required String text,
+    required String receiver,
+  }) async {
+    MessageModel messageModel = MessageModel(
+        senderId: userModel!.uId,
+        receiverId: receivedId,
+        receiver: receiver,
+        sendBy: userModel!.name!,
+        dateTime: dateTime,
+        text: text);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(userModel!.uId)
+        .collection('chats')
+        .doc(receivedId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(CareerSendMessageSuccessState());
+    }).catchError((error) {
+      emit(CareerSendMessageErrorState());
+    });
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receivedId)
+        .collection('chats')
+        .doc(userModel!.uId)
+        .collection('messages')
+        .add(messageModel.toMap())
+        .then((value) {
+      emit(CareerSendMessageSuccessState());
+    }).catchError((error) {
+      emit(CareerSendMessageErrorState());
+    });
+  }
 
   Future sendMessage({
     required String receivedId,
@@ -758,5 +830,24 @@ class CareerCubit extends Cubit<CareerStates> {
       }
       emit(CareerGetMessagesSuccessState());
     });
+  }
+
+  void pushNotification() {}
+
+  bool isDark = false;
+
+  void changeAppMode({bool? fromShared}) {
+    if (fromShared != null) {
+      isDark = fromShared;
+      print(isDark.toString());
+      emit(AppChangeModeState());
+    } else {
+      isDark = !isDark;
+      CacheHelper.saveData(key: 'isDark', value: isDark).then((value) {
+        print(isDark.toString());
+        print(fromShared.toString());
+        emit(AppChangeModeState());
+      });
+    }
   }
 }

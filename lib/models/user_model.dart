@@ -10,6 +10,7 @@ class UserModel {
   double? longitude;
   bool? isAdmin;
   double? rating;
+  double? distance;
 
   UserModel({
     this.uId,
@@ -23,6 +24,7 @@ class UserModel {
     this.longitude,
     this.isAdmin,
     this.rating,
+    this.distance,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     uId = json['uId'];

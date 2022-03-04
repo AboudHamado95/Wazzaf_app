@@ -66,7 +66,7 @@ class AboutScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       Text(
-                        'والمهندس عبدو الخوري',
+                        'المهندس عبده الخوري',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ],

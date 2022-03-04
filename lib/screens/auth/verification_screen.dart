@@ -32,6 +32,7 @@ class VerificationScreen extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
+              backgroundColor: Colors.amber[100],
               body: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Form(
@@ -62,7 +63,8 @@ class VerificationScreen extends StatelessWidget {
                                             .phoneAuthCredentialFunction(
                                                 otpController.text);
                                     LoginCubit.get(context)
-                                        .signInWithPhoneAuthCredential(phoneAuth);
+                                        .signInWithPhoneAuthCredential(
+                                            phoneAuth);
                                   }
                                 },
                                 text: 'تأكيد الرمز',

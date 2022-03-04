@@ -44,7 +44,7 @@ class MainScreen extends StatelessWidget {
                             height: 200.0,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Colors.amber[100],
+                              color: Theme.of(context).primaryColor,
                               borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(32.0),
                                 bottomRight: Radius.circular(32.0),
@@ -179,7 +179,7 @@ void showDialogToWorkers(
       });
   await cubit.filterUsers(career.name!);
   Navigator.of(context).pop();
-  Navigator.pushNamed(context, route);
+  Navigator.pushNamed(context, route, arguments: career.name!);
 }
 
 Widget buildCareerItem(context, CareerModel career, CareerCubit cubit) {

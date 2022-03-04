@@ -17,47 +17,62 @@ class WorkersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CareerCubit, CareerStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        var _cubit = CareerCubit.get(context);
+    return Builder(builder: (context) {
+      return BlocConsumer<CareerCubit, CareerStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          var _cubit = CareerCubit.get(context);
+          final routeArg = ModalRoute.of(context)?.settings.arguments as String;
+          Future<bool> _onWillPop() async {
+            await Navigator.of(context)
+                .pushNamedAndRemoveUntil(mainRoute, (route) => false);
+            return true;
+          }
 
-        Future<bool> _onWillPop() async {
-          await Navigator.of(context)
-              .pushNamedAndRemoveUntil(mainRoute, (route) => false);
-          return true;
-        }
-
-        return WillPopScope(
-          onWillPop: _onWillPop,
-          child: Builder(builder: (context) {
-            //_cubit.filterUsers(careerName);
-            return Directionality(
-              textDirection: TextDirection.rtl,
-              child: SafeArea(
-                child: Scaffold(
-                    appBar: AppBar(
-                      title: const Text('العمال'),
-                      actions: [
-                        IconButton(
-                          onPressed: () =>
-                              navigateTo(context, searchWorkerRoute),
-                          icon: const Icon(Icons.search),
-                          padding: const EdgeInsets.all(16.0),
-                        )
-                      ],
-                    ),
-                    drawer: DrawerWidget(
-                      cubit: _cubit,
-                    ),
-                    body: workerBuilder(context, _cubit.usersList, _cubit,
-                        _cubit.usersFilterList!)),
-              ),
-            );
-          }),
-        );
-      },
-    );
+          return WillPopScope(
+              onWillPop: _onWillPop,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: SafeArea(
+                  child: Scaffold(
+                      appBar: AppBar(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        title: const Text('العمال'),
+                        actions: [
+                          IconButton(
+                            onPressed: () async {
+                              await _cubit.cleanSearchUser();
+                              Navigator.pushNamed(context, searchWorkerRoute,
+                                  arguments: routeArg);
+                            },
+                            icon: const Icon(Icons.search),
+                            padding: const EdgeInsets.all(16.0),
+                          ),
+                        ],
+                      ),
+                      floatingActionButton: FloatingActionButton(
+                        tooltip: 'أقرب عامل',
+                        onPressed: () async {
+                          await _cubit.distanceCalculation(
+                            _cubit.usersFilterList,
+                          );
+                          Navigator.pushNamed(
+                            context,
+                            nearbyRoute,
+                          );
+                        },
+                        child: const Icon(Icons.location_searching_rounded),
+                      ),
+                      drawer: DrawerWidget(
+                        cubit: _cubit,
+                      ),
+                      body: workerBuilder(context, _cubit.usersList, _cubit,
+                          _cubit.usersFilterList)),
+                ),
+              ));
+        },
+      );
+    });
   }
 }
 
@@ -114,16 +129,19 @@ Widget buildWorkerItem(context, UserModel worker, CareerCubit _cubit) =>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.star,
-                            color: Colors.amber,
+                            color: Theme.of(context).primaryColor,
                           ),
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Text(worker.rating!.toStringAsFixed(2))
+                          Text(
+                            worker.rating!.toStringAsFixed(2),
+                            style: Theme.of(context).textTheme.subtitle1,
+                          )
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

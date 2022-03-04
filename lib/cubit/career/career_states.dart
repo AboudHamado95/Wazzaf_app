@@ -78,6 +78,10 @@ class UserSearchErrorState extends CareerStates {
   UserSearchErrorState(this.error);
 }
 
+//*************Reset User search list state */
+
+class ResetUserSearchState extends CareerStates {}
+
 //************Add image User state */
 
 class UserImagePickedSuccessState extends CareerStates {}
@@ -204,6 +208,12 @@ class SelectLocationState extends CareerStates {}
 
 class ChangeMarkerState extends CareerStates {}
 
+//**************Nearby worker state */
+
+class GetNearestWorkerLoadingState extends CareerStates {}
+
+class GetNearestWorkerState extends CareerStates {}
+
 //**************Update location state */
 
 class UpdateLocationState extends CareerStates {}
@@ -240,7 +250,6 @@ class GetRatingWorkerSuccessState extends CareerStates {}
 
 class GetRatingWorkerErrorState extends CareerStates {}
 
-
 //**************Change Drop down state */
 
 class ChangeDropDownState extends CareerStates {}
@@ -274,3 +283,7 @@ class CareerGetAllUsersErrorState extends CareerStates {
 
   CareerGetAllUsersErrorState(this.error);
 }
+
+//*****************Change between dark and light theme state */
+
+class AppChangeModeState extends CareerStates {}

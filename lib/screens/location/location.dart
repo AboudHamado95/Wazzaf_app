@@ -8,8 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wazzaf/cubit/career/career_cubit.dart';
 import 'package:wazzaf/cubit/career/career_states.dart';
 
-class Location extends StatelessWidget {
-  Location({Key? key}) : super(key: key);
+class LocationScreen extends StatelessWidget {
+  LocationScreen({Key? key}) : super(key: key);
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   GoogleMapController? newGoogleMapController;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

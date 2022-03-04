@@ -54,64 +54,71 @@ class RateScreen extends StatelessWidget {
 
               return WillPopScope(
                 onWillPop: _onWillPop,
-                child: Scaffold(
-                  appBar: AppBar(
-                    title: const Text('تقييم العامل'),
-                  ),
-                  body: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(height: 160.0),
-                        RatingBarIndicator(
-                          rating: rateCubit.userRating,
-                          itemBuilder: (context, index) => Icon(
-                            _selectedIcon ?? Icons.star,
-                            color: Colors.amber,
+                child: SafeArea(
+                  child: Scaffold(
+                    appBar: AppBar(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      title: const Text('تقييم العامل'),
+                    ),
+                    body: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const SizedBox(height: 160.0),
+                          RatingBarIndicator(
+                            rating: rateCubit.userRating,
+                            itemBuilder: (context, index) => Icon(
+                              _selectedIcon ?? Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemCount: 5,
+                            itemSize: 50.0,
+                            unratedColor: Colors.amber.withAlpha(50),
                           ),
-                          itemCount: 5,
-                          itemSize: 50.0,
-                          unratedColor: Colors.amber.withAlpha(50),
-                        ),
-                        const SizedBox(height: 20.0),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Form(
-                              key: formKey,
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    controller: _ratingController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      hintText: 'أدخل التقييم',
-                                      labelText: 'أدخل التقييم',
+                          const SizedBox(height: 20.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Form(
+                                key: formKey,
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      controller: _ratingController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          border: const OutlineInputBorder(),
+                                          hintText: 'أدخل التقييم',
+                                          labelText: 'أدخل التقييم',
+                                          labelStyle: TextStyle(
+                                              color: rateCubit.isDark
+                                                  ? Colors.white
+                                                  : Colors.black)),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'الرجاء أدخل التقييم';
+                                        }
+                                        return null;
+                                      },
                                     ),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'الرجاء أدخل التقييم';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      if (formKey.currentState!.validate()) {
-                                        showDialogToUpdateRating(
-                                            context, rateCubit);
-                                      }
-                                    },
-                                    child: const Text(
-                                      'اضغط',
-                                      style: TextStyle(color: Colors.white),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (formKey.currentState!.validate()) {
+                                          showDialogToUpdateRating(
+                                              context, rateCubit);
+                                        }
+                                      },
+                                      child: const Text(
+                                        'اضغط',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )),
-                        ),
-                      ],
+                                  ],
+                                )),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

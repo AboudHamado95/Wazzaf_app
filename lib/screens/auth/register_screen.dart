@@ -70,6 +70,7 @@ class RegisterScreen extends StatelessWidget {
             textDirection: TextDirection.rtl,
             child: SafeArea(
               child: Scaffold(
+                backgroundColor: Colors.amber[100],
                 body: Center(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -94,8 +95,8 @@ class RegisterScreen extends StatelessWidget {
                                   children: [
                                     const Text(
                                       'صاحب مهنة؟',
-                                      style:
-                                          TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(
                                       width: 16.0,
@@ -132,7 +133,8 @@ class RegisterScreen extends StatelessWidget {
                                 controller: passwordController,
                                 type: TextInputType.visiblePassword,
                                 suffix: RegisterCubit.get(context).suffix,
-                                isPassword: RegisterCubit.get(context).isPassword,
+                                isPassword:
+                                    RegisterCubit.get(context).isPassword,
                                 suffixPressed: () {
                                   RegisterCubit.get(context)
                                       .changePasswordVisibility();
@@ -141,9 +143,6 @@ class RegisterScreen extends StatelessWidget {
                                 returnValidate: "كلمة السر صغيرة جدا",
                                 label: 'كلمة السر',
                                 prefix: Icons.lock_outline),
-            
-                        
-            
                             const SizedBox(height: 15.0),
                             IntlPhoneField(
                               textAlign: TextAlign.start,
@@ -232,24 +231,27 @@ class RegisterScreen extends StatelessWidget {
                                       function: () {
                                         if ((_cubit.latitude == null &&
                                                 _cubit.longitude == null) &&
-                                            _cubit.phoneAuth != null) {
+                                            _cubit.phoneAuth == null) {
                                           showToast(
                                               message: 'يرجى تحديد الموقع',
                                               state: ToastStates.WARNING);
                                         } else {
-                                          if (formKey.currentState!.validate()) {
+                                          if (formKey.currentState!
+                                              .validate()) {
                                             if (RegisterCubit.get(context)
                                                 .literal) {
                                               RegisterCubit.get(context)
                                                   .userRegister(
                                                       name: nameController.text
                                                           .trim(),
-                                                      email: emailController.text
-                                                          .trim(),
-                                                      phone: _cubit.phoneAuth!,
-                                                      password: passwordController
+                                                      email: emailController
                                                           .text
                                                           .trim(),
+                                                      phone: _cubit.phoneAuth!,
+                                                      password:
+                                                          passwordController
+                                                              .text
+                                                              .trim(),
                                                       city: cityController.text
                                                           .trim(),
                                                       lan: _cubit.longitude!,
@@ -259,13 +261,16 @@ class RegisterScreen extends StatelessWidget {
                                             } else {
                                               RegisterCubit.get(context)
                                                   .userRegister(
-                                                name: nameController.text.trim(),
+                                                name:
+                                                    nameController.text.trim(),
                                                 email:
                                                     emailController.text.trim(),
-                                                password: passwordController.text
+                                                password: passwordController
+                                                    .text
                                                     .trim(),
                                                 phone: _cubit.phoneAuth!,
-                                                city: cityController.text.trim(),
+                                                city:
+                                                    cityController.text.trim(),
                                                 lan: _cubit.longitude!,
                                                 lat: _cubit.latitude!,
                                               );

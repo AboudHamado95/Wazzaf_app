@@ -37,7 +37,10 @@ class PhoneAuth extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
-              appBar: AppBar(),
+               backgroundColor: Colors.amber[100],
+              appBar: AppBar(
+                backgroundColor: Colors.amber,
+              ),
               body: Center(
                 child: SingleChildScrollView(
                   child: Padding(
